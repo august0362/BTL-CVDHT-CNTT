@@ -62,3 +62,8 @@ documents/docs/qa/UI_LOADING_NARROW_2026-09-25/real_spinner_1440.png
 .env
 .codex/
 pipeline_visualizer/samples/*.jpg
+
+# Pipeline Studio: module cục bộ, không đưa lên GitHub (người dùng yêu cầu 2026-10-15)
+frontend/pipeline_studio.py
+frontend/pipeline_visualizer/
+pipeline_visualizer/

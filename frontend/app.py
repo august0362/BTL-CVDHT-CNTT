@@ -60,6 +60,8 @@ LABELS_YAML = BACKEND_ROOT / "configs" / "labels.yaml"  # tên tiếng Việt (+
 SERVICES_YAML = BACKEND_ROOT / "configs" / "services.yaml"  # limits.max_image_bytes → dòng hướng dẫn trong ô tải ảnh
 UPLOAD_LIMIT_FALLBACK = 10 * 1024 * 1024  # = _FALLBACK_LIMITS của backend/web/orchestrator.py khi thiếu config
 MODELS_YAML = BACKEND_ROOT / "configs" / "models.yaml"  # registry: tên hiển thị/dataset cho mô hình lỗi
+# Pipeline Studio là module cục bộ (không có trong repo GitHub): thiếu file thì ẩn nút và trang (ADR-030).
+PIPELINE_STUDIO_AVAILABLE = (PROJECT_ROOT / "frontend" / "pipeline_studio.py").is_file()
 
 # Thông báo theo mã lỗi (CONTRACTS_ADR.md, bảng lỗi) — kèm việc cần làm tiếp.
 ERROR_HINTS = {
@@ -362,7 +364,7 @@ def render_settings(palettes: list, default_theme: str, problems: list[str], lab
         st.toggle("Hiện khung mặt", key="pref_bb")
         st.toggle("Hiện ảnh trung gian & attention", key="pref_att")
         render_engine_panel()
-        if st.button("✦ Pipeline Studio", key="open_pipeline_studio", help="Mở canvas trực quan hoá pipeline"):
+        if PIPELINE_STUDIO_AVAILABLE and st.button("✦ Pipeline Studio", key="open_pipeline_studio", help="Mở canvas trực quan hoá pipeline"):
             st.query_params["page"] = "pipeline-studio"
             st.rerun()
     with c_link:
@@ -1146,7 +1148,7 @@ def main():
 
     header_slot = st.empty()  # cập nhật ngay khi có kết quả, không đợi lần chạy sau
     sync_query_params()
-    if st.query_params.get("page") == "pipeline-studio":
+    if PIPELINE_STUDIO_AVAILABLE and st.query_params.get("page") == "pipeline-studio":
         if ORCHESTRATOR_ERROR:
             st.error(f"Không nạp được pipeline: {ORCHESTRATOR_ERROR}")
             return
