@@ -80,7 +80,13 @@ def _css() -> str:
     [data-testid="stFileUploaderDropzone"] > div {
       background:#030303 !important;border:1px dashed #2a5559 !important;border-radius:14px;color:#b9d1dc !important;
     }
-    [data-testid="stFileUploaderDropzone"] button {background:#070707 !important;color:#c9fff4 !important;border-color:#327e75 !important}
+    [data-testid="stFileUploader"] *, [data-testid="stFileUploaderDropzone"] * {
+      color:#d7e7ed !important;
+    }
+    [data-testid="stFileUploaderDropzone"] button {
+      background:#101818 !important;color:#e4fff9 !important;border:1px solid #327e75 !important;
+    }
+    [data-testid="stFileUploaderDropzone"] svg {fill:#78ffe4 !important;color:#78ffe4 !important;}
     [data-baseweb="tab-list"] {gap:4px;border-bottom:1px solid #17353d}
     [data-baseweb="tab"] {background:#0c141d;border-radius:9px 9px 0 0;color:#9db5c1}
     [aria-selected="true"][data-baseweb="tab"] {color:#aaffef !important;border-bottom-color:#52f7dc !important}
@@ -88,12 +94,12 @@ def _css() -> str:
     .ps-orb {width:42px;height:42px;border-radius:14px;display:grid;place-items:center;color:#041411;
       background:linear-gradient(135deg,#9bffe8,#23c9db);box-shadow:0 0 22px #36f5d777;font-weight:900}
     .ps-title {font-size:30px;font-weight:800;letter-spacing:-.04em;margin:0}
-    .ps-sub {color:#91a8b8;margin:0 0 18px 56px}
+    .ps-sub {color:#c2d5dc;margin:0 0 18px 56px}
     .ps-board {padding:20px 12px;border:1px solid #1d3942;border-radius:20px;background:#020202;
       box-shadow:inset 0 1px #ffffff08,0 18px 60px #0009;overflow-x:auto}
     .ps-flow {display:flex;align-items:stretch;gap:0;min-width:950px;padding:10px 4px 16px}
     .ps-node {position:relative;flex:1;min-width:112px;max-width:190px;border-radius:15px;padding:13px 11px;
-      background:linear-gradient(150deg,#0b0b0b,#030303);border:1px solid #243030;color:#91a6b5;
+      background:linear-gradient(150deg,#0b0b0b,#030303);border:1px solid #243030;color:#d7e7ed;
       transition:transform .35s ease,border-color .35s ease,box-shadow .35s ease,opacity .35s ease;}
     .ps-node.running {border-color:#37f4dc;box-shadow:0 0 7px #37f4dc88,0 0 25px #19d5d355,inset 0 0 20px #29f4d111;
       color:#eafffb;transform:translateY(-4px);animation:ps-pulse 1.65s ease-in-out infinite}
@@ -105,15 +111,15 @@ def _css() -> str:
     .ps-icon {width:24px;height:24px;border-radius:8px;display:grid;place-items:center;background:#18333b;color:#74ffe6;font-size:12px}
     .ps-node.done .ps-icon {background:#123d37;color:#5ff4d4}
     .ps-node.error .ps-icon {background:#421c2a;color:#ff809a}
-    .ps-detail {font-size:10px;line-height:1.4;color:#8196a4;margin-top:9px;min-height:27px}
+    .ps-detail {font-size:10px;line-height:1.4;color:#c0d1d6;margin-top:9px;min-height:27px}
     .ps-edge {width:35px;min-width:28px;position:relative;align-self:center;height:2px;background:#223642;overflow:visible}
     .ps-edge.flowing {background:linear-gradient(90deg,#1f4550,#45ffe2,#1f4550);box-shadow:0 0 10px #37f4dc99}
     .ps-edge.flowing:after {content:"";position:absolute;top:-4px;left:-7px;width:10px;height:10px;border-radius:50%;background:#bdfff5;
       box-shadow:0 0 8px 3px #2ffff0,0 0 20px 6px #14ddf0;animation:ps-travel 1.05s linear infinite}
-    .ps-branch {border:1px solid #1d3942;border-radius:14px;padding:13px 15px;background:#030303;color:#9cb3c1;margin-top:12px}
+    .ps-branch {border:1px solid #1d3942;border-radius:14px;padding:13px 15px;background:#030303;color:#d2e2e7;margin-top:12px}
     .ps-branch b {color:#d7fff8}
     .ps-module-title {color:#8df9e8;font-weight:750;letter-spacing:.02em}
-    .ps-muted {color:#8299a8;font-size:12px}
+    .ps-muted {color:#bfd0d6;font-size:12px}
     @keyframes ps-travel {from{left:-7px}to{left:calc(100% - 3px)}}
     @keyframes ps-pulse {0%,100%{box-shadow:0 0 7px #37f4dc66,0 0 18px #19d5d333}50%{box-shadow:0 0 13px #37f4dccc,0 0 34px #19d5d377}}
     @media (prefers-reduced-motion: reduce) { .ps-node.running,.ps-edge.flowing:after {animation:none} * {scroll-behavior:auto !important} }
@@ -351,16 +357,17 @@ def render_pipeline_studio(*, analyze_fn, prepare_fn, multiface_fn, roll_fn,
             del st.query_params["page"]
         st.rerun()
 
-    first, second = st.columns(2)
-    with first:
-        up1 = st.file_uploader("Ảnh 1", type=("jpg", "jpeg", "png", "webp"), key="ps_upload_1")
-    with second:
-        up2 = st.file_uploader("Ảnh 2 · tuỳ chọn", type=("jpg", "jpeg", "png", "webp"), key="ps_upload_2")
-    uploads = [upload for upload in (up1, up2) if upload is not None]
+    uploads = st.file_uploader(
+        "Ảnh đầu vào · chọn một ảnh hoặc nhiều ảnh",
+        type=("jpg", "jpeg", "png", "webp"),
+        accept_multiple_files=True,
+        key="ps_uploads",
+        help="Có thể chọn một ảnh hoặc chọn nhiều ảnh trong cùng một lần.",
+    )
     if not uploads:
         _pipeline_canvas(statuses=_node_statuses(), selected=st.session_state.get("ps_selected_module", "input"),
                          active=None, key="ps_canvas")
-        st.markdown('<p class="ps-muted">Thêm tối đa hai ảnh để tạo luồng dữ liệu.</p>', unsafe_allow_html=True)
+        st.markdown('<p class="ps-muted">Chọn một ảnh hoặc một chùm ảnh để tạo các luồng dữ liệu.</p>', unsafe_allow_html=True)
         return
 
     signatures = tuple(hashlib.sha256(upload.getvalue()).hexdigest() for upload in uploads)
