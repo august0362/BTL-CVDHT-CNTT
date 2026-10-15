@@ -8,7 +8,6 @@
 another
 database
 documents
-pipeline_visualizer
 backend/model/emoca
 backend/model/ma3d/checkpoints
 backend/model/ma3d/.git-upstream

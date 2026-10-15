@@ -13,7 +13,6 @@ from threading import Lock
 from time import perf_counter
 from typing import Any, Callable
 import ctypes
-import logging
 import os
 
 from PIL import Image, ImageDraw, ImageOps
@@ -25,24 +24,11 @@ from web.face_preprocessor import (
     FaceDetectionResult,
     NoFaceDetectedError,
 )
+from web.runtime_sync import model_stage
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-_LOG = logging.getLogger(__name__)
 GENERAL_CHECKPOINT = PROJECT_ROOT / "model" / "realesr-general-x4v3" / "realesr-general-x4v3.pth"
 YOLO_CHECKPOINT = PROJECT_ROOT / "model" / "yolo26_face" / "yolo26_face.pt"
-
-
-@dataclass
-class PredataViews:
-    """Input, detector enhancement, and original-image YOLO crop."""
-
-    source_image: Image.Image
-    enhanced_image: Image.Image | None = None
-    enhanced_detection: FaceDetectionResult | None = None
-    branch_errors: dict[str, str | None] = field(default_factory=lambda: {
-        "enhanced_detection": None,
-    })
-    stage_times_ms: dict[str, float] = field(default_factory=dict)
 
 
 @dataclass
@@ -75,13 +61,6 @@ _STACK: _ModelStack | None = None
 _STACK_LOCK = Lock()
 
 
-def _build_model_stack() -> _ModelStack:
-    """Load local adapters for the optional detector-stage panel."""
-    stack = _ModelStack()
-    _load_stack_components(stack, ("general", "detector"))
-    return stack
-
-
 def _load_stack_components(stack: _ModelStack, components: tuple[str, ...]) -> None:
     """Load requested adapters once; one unavailable model does not disable others."""
     if "general" in components and stack.general is None and "general" not in stack.load_errors:
@@ -103,17 +82,6 @@ def _load_stack_components(stack: _ModelStack, components: tuple[str, ...]) -> N
             )
         except Exception as exc:
             stack.load_errors["detector"] = f"{type(exc).__name__}: {exc}"
-
-
-def _get_model_stack() -> _ModelStack:
-    global _STACK
-    if _STACK is None:
-        with _STACK_LOCK:
-            if _STACK is None:
-                _STACK = _ModelStack()
-    with _STACK_LOCK:
-        _load_stack_components(_STACK, ("general", "detector"))
-    return _STACK
 
 
 def _get_multiface_model_stack() -> _ModelStack:
@@ -181,9 +149,7 @@ def _limit_windows_cpu_cores(limit: int = 4):
                     limited_mask |= bit
                     remaining ^= bit
                 if limited_mask and limited_mask != original_mask:
-                    if set_mask(handle, ctypes.c_size_t(limited_mask)):
-                        _LOG.info("Pre-data CPU affinity limited to %s logical cores", limited_mask.bit_count())
-                    else:
+                    if not set_mask(handle, ctypes.c_size_t(limited_mask)):
                         original_mask = None
         yield
     finally:
@@ -194,22 +160,7 @@ def _limit_windows_cpu_cores(limit: int = 4):
                 pass
 
 
-def build_predata_views(image: Image.Image) -> PredataViews:
-    """Build views while limiting CPU thread fan-out so the web host stays responsive."""
-    import torch
-
-    original_threads = torch.get_num_threads()
-    limit_threads = not torch.cuda.is_available() and original_threads > 4
-    with _limit_windows_cpu_cores(4):
-        if limit_threads:
-            torch.set_num_threads(4)
-        try:
-            return _build_predata_views(image)
-        finally:
-            if limit_threads:
-                torch.set_num_threads(original_threads)
-
-
+@model_stage
 def build_multiface_views(
     image: Image.Image,
     max_faces: int = MAX_FACES_PER_IMAGE,
@@ -252,7 +203,7 @@ def _build_multiface_views(
     detections: list[FaceDetectionResult] = []
     inference_failed = False
     if detector is None:
-        result.errors.append(stack.load_errors.get("detector", "YOLO face detector unavailable"))
+        result.errors.append(f"YOLO: {stack.load_errors.get('detector', 'face detector unavailable')}")
         inference_failed = True
     else:
         report("Đang chạy YOLO trên ảnh gốc…")
@@ -269,7 +220,7 @@ def _build_multiface_views(
             with _STACK_LOCK:
                 _load_stack_components(stack, ("general",))
             if stack.general is None:
-                result.errors.append(stack.load_errors.get("general", "RealESRGAN unavailable"))
+                result.errors.append(f"RealESRGAN: {stack.load_errors.get('general', 'unavailable')}")
                 inference_failed = True
             else:
                 started = perf_counter()
@@ -324,52 +275,3 @@ def _build_multiface_views(
     return result
 
 
-def _build_predata_views(image: Image.Image) -> PredataViews:
-    """Build detector enhancement and original-image crop views in RAM.
-
-    Args:
-        image: Input PIL image in any supported mode. All returned images are
-            independent RGB PIL images.
-    """
-    if not isinstance(image, Image.Image):
-        raise TypeError("image must be a PIL.Image.Image")
-    source = ImageOps.exif_transpose(image).convert("RGB").copy()
-    result = PredataViews(source_image=source)
-    stack = _get_model_stack()
-
-    started = perf_counter()
-    if stack.general is None:
-        result.branch_errors["enhanced_detection"] = stack.load_errors.get(
-            "general", "general restorer unavailable"
-        )
-    else:
-        try:
-            enhanced = stack.general.restore(source.copy())
-            if not isinstance(enhanced, Image.Image):
-                raise TypeError("general restorer must return a PIL image")
-            enhanced = enhanced.convert("RGB")
-            if enhanced.size != source.size:
-                raise ValueError("general restorer changed image dimensions")
-            result.enhanced_image = enhanced
-        except Exception as exc:
-            result.branch_errors["enhanced_detection"] = f"{type(exc).__name__}: {exc}"
-    result.stage_times_ms["general_restoration"] = _elapsed(started)
-
-    if result.enhanced_image is not None:
-        started = perf_counter()
-        if stack.detector is None:
-            result.branch_errors["enhanced_detection"] = stack.load_errors.get(
-                "detector", "detector model unavailable"
-            )
-        else:
-            try:
-                result.enhanced_detection = _crops_from_original(
-                    [stack.detector.process(result.enhanced_image.copy())], source
-                )[0]
-            except Exception as exc:
-                result.branch_errors["enhanced_detection"] = f"{type(exc).__name__}: {exc}"
-        result.stage_times_ms["enhanced_detection"] = _elapsed(started)
-    else:
-        result.stage_times_ms["enhanced_detection"] = 0.0
-
-    return result

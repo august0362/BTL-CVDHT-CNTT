@@ -23,7 +23,6 @@ import base64
 import io
 import ipaddress
 import os
-import threading
 import time
 import urllib.parse
 from pathlib import Path
@@ -31,6 +30,11 @@ from typing import Any, BinaryIO, Callable, Literal, Union
 
 import numpy as np
 from PIL import Image, ImageOps, UnidentifiedImageError
+
+try:
+    from web.runtime_sync import MODEL_RUNTIME_LOCK, model_stage
+except ImportError:
+    from runtime_sync import MODEL_RUNTIME_LOCK, model_stage
 
 try:
     from . import emoca_client, engine
@@ -64,6 +68,7 @@ def roll_correction_settings() -> tuple[bool, float]:
     return enabled, threshold
 
 
+@model_stage
 def _correct_roll_crop(crop: Image.Image, threshold: float) -> tuple[Image.Image, dict[str, Any] | None]:
     """Run the optional 3DDFA roll estimate on a face-tight crop, failing open."""
     try:
@@ -134,7 +139,7 @@ ImageInput = Union[bytes, bytearray, memoryview, BinaryIO, Any]
 
 # Khoá toàn cục: không chạy hai ảnh cùng lúc qua AI (GPU nhỏ, 03_BACKEND.md §2.8).
 # max_concurrent > 1 chưa hỗ trợ; khi có config thật sẽ đổi thành Semaphore.
-_AI_LOCK = threading.Lock()
+_AI_LOCK = MODEL_RUNTIME_LOCK
 
 
 class AnalyzeError(Exception):
@@ -396,14 +401,14 @@ def _run_ai(img: Image.Image, max_faces: int, mock_case: MockCase, settings: dic
     emoca_roundtrip_ms = round((time.perf_counter() - t_emoca) * 1000, 2)
     if "error" in emoca:
         err = emoca["error"]
-        report("emoca", "error", err.get("message", err.get("code", "EMOCA lỗi")))
+        report("emoca", "error", f"[{err.get('code', 'emoca_error')}] {err.get('message', 'EMOCA lỗi')}")
         if err["code"] in _INPUT_ERROR_CODES:
             raise AnalyzeError(err["code"], err["message"], err.get("retryable", False))
         return [], [], {}, dict(err), None
 
     emoca_faces = emoca.get("faces") or []
     if not emoca_faces:
-        report("emoca", "error", "EMOCA không trả khuôn mặt nào.")
+        report("emoca", "error", "[no_face] EMOCA không trả khuôn mặt nào.")
         raise AnalyzeError("no_face", "EMOCA không trả khuôn mặt nào.")
     report("emoca", "done", f"Đã trả {min(len(emoca_faces), max_faces)} crop/mặt.")
 
@@ -431,6 +436,12 @@ def _run_ai(img: Image.Image, max_faces: int, mock_case: MockCase, settings: dic
             "warn" if any(prediction_states) else "error")
         report("classifier", classifier_state,
                f"{sum(prediction_states)}/{len(predictions)} model trả kết quả.")
+        for prediction in predictions:
+            model = "ma3d" if "ma3d" in prediction.get("model_id", "").lower() else "poster"
+            error = prediction.get("error") or {}
+            report(model, "done" if prediction.get("status") == "ok" else "error",
+                   "Suy luận hoàn tất." if prediction.get("status") == "ok" else
+                   f"[{error.get('code', 'model_error')}] {error.get('message', 'Model không trả kết quả.')}")
         engine_wall_ms += (time.perf_counter() - t_engine) * 1000
         all_predictions += predictions
         ma3d_ms += sum(p.get("latency_ms", 0.0) for p in predictions if p.get("status") == "ok")
@@ -565,8 +576,9 @@ def analyze_multiface(
     max_faces: int = MAX_FACES_PER_IMAGE,
     progress_callback: Callable[[str], None] | None = None,
     views: Any = None,
+    module_callback: Callable[[int, str, str, str | None], None] | None = None,
 ) -> dict[str, Any]:
-    """Run MA3D serially on original-image crops without changing web_analyze."""
+    """Run POSTER and MA3D on each crop, sharing EMOCA and alignment output."""
     if not isinstance(image, Image.Image):
         raise TypeError("image must be a PIL.Image.Image")
     if isinstance(max_faces, bool) or not isinstance(max_faces, int) or max_faces < 1:
@@ -582,6 +594,10 @@ def analyze_multiface(
         if progress_callback is not None:
             progress_callback(message)
 
+    def report_module(face_id: int, module: str, state: str, detail: str | None = None) -> None:
+        if module_callback is not None:
+            module_callback(face_id, module, state, detail)
+
     if views is None:
         views = predata_experiment.build_multiface_views(
             image, max_faces=face_limit, progress_callback=report
@@ -589,11 +605,12 @@ def analyze_multiface(
     elif len(getattr(views, "faces", ())) > face_limit:
         views.faces = views.faces[:face_limit]
 
-    def run_ma3d(face_image: Image.Image) -> dict[str, Any]:
+    def run_models(face_image: Image.Image, face_id: int) -> dict[str, Any]:
         buffer = io.BytesIO()
         face_image.convert("RGB").save(buffer, format="PNG")
+        observer = (lambda module, state, detail: report_module(face_id, module, state, detail)) if module_callback else None
         return analyze(buffer.getvalue(), emoca=emoca, engine_mode=engine_mode,
-                       model_ids=["ma3d_rafdb"], max_faces=1)
+                       model_ids=["poster_rafdb", "ma3d_rafdb"], max_faces=1, progress_callback=observer)
 
     rows: list[dict[str, Any]] = []
     if len(views.faces) == 1:
@@ -607,19 +624,28 @@ def analyze_multiface(
             try:
                 roll_enabled, roll_threshold = roll_correction_settings()
                 if roll_enabled:
+                    report_module(item.face_id, "roll", "running", "Đang đo roll trên crop YOLO.")
                     model_image, roll_info = _correct_roll_crop(model_image, roll_threshold)
                     if roll_info and roll_info.get("error"):
                         views.errors.append(f"Face {item.face_id} 3DDFA roll: {roll_info['error']}")
+                        report_module(item.face_id, "roll", "warn", f"{roll_info['error']} — giữ crop chưa xoay.")
+                    else:
+                        rotation = (roll_info or {}).get("rotation_deg", 0)
+                        report_module(item.face_id, "roll", "done",
+                                      f"Đã xoay {rotation:.1f}°." if rotation else "Roll dưới ngưỡng; giữ nguyên crop.")
+                else:
+                    report_module(item.face_id, "roll", "skipped", "Sửa roll đang tắt trong cấu hình.")
             except Exception as exc:
                 roll_info = {"error": f"{type(exc).__name__}: {exc}"}
                 views.errors.append(f"Face {item.face_id} 3DDFA roll: {roll_info['error']}")
+                report_module(item.face_id, "roll", "warn", f"{roll_info['error']} — giữ crop chưa xoay.")
             try:
-                prediction_result = run_ma3d(model_image)
+                prediction_result = run_models(model_image, item.face_id)
             except Exception as exc:
                 prediction_result = {"status": "error", "faces": [],
                                      "error": {"code": "internal_error",
                                                "message": f"{type(exc).__name__}: {exc}"}}
-                views.errors.append(f"Face {item.face_id} MA3D: {type(exc).__name__}: {exc}")
+                views.errors.append(f"Face {item.face_id} analysis: {type(exc).__name__}: {exc}")
             rows.append({
                 "face_id": item.face_id,
                 "reference": item.reference_image,
@@ -652,14 +678,3 @@ def prepare_multiface_views(
         image, max_faces=face_limit, progress_callback=progress_callback
     )
 
-
-def run_frontalization_experiment(views: Any, *, emoca: dict[str, Any] | None = None,
-                                  engine_mode: str | None = None,
-                                  progress_callback: Callable[[str], None] | None = None) -> dict[str, Any]:
-    """Thin package/script-compatible entry point for the opt-in M8 experiment."""
-    try:
-        from .frontalize_experiment import run_frontalization_experiment as run
-    except ImportError:  # Streamlit launched with web/ on sys.path
-        from frontalize_experiment import run_frontalization_experiment as run
-    return run(views, emoca=emoca, engine_mode=engine_mode or "mock",
-               progress_callback=progress_callback)

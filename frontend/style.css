@@ -1,0 +1,136 @@
+/* CSS cố định cho giao diện sáng, tương phản cao vừa đủ, cỡ chữ M và có chuyển động.
+   Giá trị màu được sinh từ palette cold; upload hint vẫn được frontend/app.py chèn theo giới hạn backend. */
+:root, html, body, .stApp { color-scheme: only light; }
+:root {
+  --bg:#eaf2fa; --surface:#f9fcfe; --surface2:#d6e7f5; --border:#b3d2ec; --border-strong:#5d86a8;
+  --text:#0f1b2e; --muted:#38668a; --brand:#2196f3; --on-brand:#0f1b24; --brand-ink:#0966af;
+  --accent:#2721f3; --on-accent:#ffffff; --accent-ink:#2721f3; --brand-soft:#dbeefc; --ring:#0c84e4;
+  --shadow:0 1px 2px rgba(15,23,42,.06), 0 10px 28px rgba(15,23,42,.08); --radius:18px; --bw:1px; --motion:.16s;
+  --success-ink:#13763c; --success-tint:#ddf3e9; --success-border:#92c0a7;
+  --warning-ink:#8c6117; --warning-tint:#f1ece1; --warning-border:#c8b696;
+  --danger-ink:#b8281e; --danger-tint:#f1e0e1; --danger-border:#dc9d99;
+  --info-ink:#1a6aa2; --info-tint:#ddebf5; --info-border:#95bad5;
+  --stripe:linear-gradient(90deg, #e3f2fd, #90caf9, #2196f3, #0d47a1);
+}
+html { font-size:16px; }
+html, body, .stApp, [data-testid="stApp"], [data-testid="stAppViewContainer"], [data-testid="stMain"] {
+  background:var(--bg) !important; color:var(--text) !important; font-family:"Source Sans", "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif !important;
+}
+* { transition-duration:var(--motion) !important; animation-duration:var(--motion) !important; }
+[data-testid="stHeader"] { background:transparent !important; height:0 !important; pointer-events:none; }
+[data-testid="stHeader"] button { pointer-events:auto; }
+[data-testid="stHeader"] button, [data-testid="stHeader"] svg { color:var(--text) !important; fill:var(--text) !important; }
+[data-testid="stToolbar"], [data-testid="stAppDeployButton"], [data-testid="stMainMenu"], #MainMenu, footer { display:none !important; }
+[data-testid="stElementContainer"]:has(> [data-testid="stMarkdown"] style) { display:none !important; }
+[data-testid="stMainBlockContainer"] { max-width:1100px; margin:0 auto; padding:1rem 1.5rem 2rem; }
+h1, h2, h3, h4, h5, h6, p, li, label, span, div, small { font-family:inherit; }
+[data-testid="stMarkdownContainer"], [data-testid="stMarkdownContainer"] p, [data-testid="stMarkdownContainer"] li,
+[data-testid="stWidgetLabel"], [data-testid="stWidgetLabel"] p, label, [data-testid="stWidgetLabel"] span { color:var(--text) !important; }
+[data-testid="stCaptionContainer"], [data-testid="stCaptionContainer"] *, [data-testid="stImageCaption"] { color:var(--muted) !important; opacity:1 !important; }
+a { color:var(--brand-ink) !important; }
+:focus-visible { outline:3px solid var(--ring) !important; outline-offset:2px !important; }
+::selection { background:var(--brand); color:var(--on-brand); }
+
+/* ---------- tiêu đề trang (chỉ chữ, ADR-032) ---------- */
+.mx-topbar { margin:0 0 20px; }
+.mx-title { margin:0 !important; padding:0 !important; font-size:clamp(1.35rem, 2vw, 1.65rem) !important; line-height:1.15 !important;
+  font-weight:850 !important; letter-spacing:-.025em; color:var(--text) !important; }
+
+/* ---------- thẻ ---------- */
+div[data-testid="stVerticalBlockBorderWrapper"] { background:var(--surface) !important; border:var(--bw) solid var(--border) !important;
+  border-radius:var(--radius) !important; box-shadow:var(--shadow) !important; }
+div[data-testid="stVerticalBlockBorderWrapper"] div[data-testid="stVerticalBlockBorderWrapper"] { box-shadow:none !important; background:var(--surface2) !important; }
+.mx-sec { margin:2px 0 12px; }
+.mx-sec-t { font-size:1.12rem; font-weight:800; letter-spacing:-.01em; color:var(--text); line-height:1.2; }
+
+/* ---------- nút ---------- */
+[data-testid="stBaseButton-secondary"], [data-testid="stBaseButton-primary"] {
+  border-radius:999px !important; font-weight:700 !important; padding:.5rem 1.2rem !important; box-shadow:none !important;
+  background:var(--surface) !important; color:var(--text) !important; border:var(--bw) solid var(--border-strong) !important; }
+[data-testid="stBaseButton-secondary"] *, [data-testid="stBaseButton-primary"] * { color:inherit !important; }
+[data-testid="stBaseButton-secondary"]:hover {
+  border-color:var(--brand) !important; background:var(--brand-soft) !important; }
+[data-testid="stBaseButton-primary"] { background:var(--brand) !important; color:var(--on-brand) !important; border-color:var(--brand) !important; }
+/* nhãn nút nằm trong <p> của markdown → phải nhắm trực tiếp, nếu không sẽ bị quy tắc màu chữ chung ghi đè */
+[data-testid="stBaseButton-primary"] p, [data-testid="stBaseButton-primary"] span,
+[data-testid="stBaseButton-primary"] [data-testid="stMarkdownContainer"] { color:var(--on-brand) !important; }
+[data-testid="stBaseButton-primary"]:hover { background:var(--brand) !important; border-color:var(--brand-ink) !important; box-shadow:0 0 0 3px var(--brand-soft) !important; }
+
+/* ---------- ô tải ảnh: dropzone LỚN, luôn hiện rõ (kể cả khi đã có ảnh — để thay ảnh) ----------
+   Gốc dropzone của Streamlit là vùng react-dropzone: bấm BẤT KỲ đâu trong ô mở hộp chọn tệp, kéo thả vào ô cũng được.
+   Bàn phím: nút "Chọn ảnh" (chưa có ảnh) / nút xoá + nút thêm (đã có ảnh) nhận focus; cả ô sáng viền khi có focus bên trong.
+   Biểu tượng dùng phông Material Symbols Rounded mà Streamlit đã mang sẵn (không tải thêm gì từ ngoài).
+   Dòng giới hạn (định dạng, dung lượng) đến từ biến --mx-upload-hint do frontend/app.py đặt theo backend/configs/services.yaml. */
+[data-testid="stFileUploaderDropzone"] { position:relative; display:flex !important; flex-direction:column !important;
+  align-items:center !important; justify-content:center !important; gap:8px !important; min-height:168px; width:100%;
+  padding:18px 16px !important; text-align:center; cursor:pointer; background:var(--surface2) !important;
+  border:2px dashed var(--border-strong) !important; border-radius:var(--radius) !important;
+  transition:border-color .16s, background .16s; }
+[data-testid="stFileUploaderDropzone"] > * { order:3; }
+[data-testid="stFileUploaderDropzone"]::before { content:"upload"; order:0; display:flex; align-items:center; justify-content:center;
+  width:48px; height:48px; border-radius:50%; background:var(--brand-soft); color:var(--brand-ink);
+  font-family:"Material Symbols Rounded"; font-feature-settings:"liga"; font-size:30px; line-height:1; font-weight:400; }
+[data-testid="stFileUploaderDropzone"]:hover { border-color:var(--brand) !important; background:var(--brand-soft) !important; }
+[data-testid="stFileUploaderDropzone"]:hover::before { background:var(--surface); }
+[data-testid="stFileUploaderDropzone"]:has(:focus-visible) { border-color:var(--brand) !important; border-style:solid !important;
+  box-shadow:0 0 0 3px var(--ring) !important; }
+[data-testid="stFileUploaderDropzoneInstructions"] { order:1; display:flex !important; flex-direction:column; align-items:center;
+  text-align:center; }
+[data-testid="stFileUploaderDropzoneInstructions"] > div { display:none !important; }
+[data-testid="stFileUploaderDropzoneInstructions"]::before { content:"Kéo thả ảnh vào đây hoặc bấm để chọn tệp"; display:block;
+  font-size:1.02rem; font-weight:800; color:var(--text); }
+[data-testid="stFileUploaderDropzoneInstructions"]::after { content:var(--mx-upload-hint, "JPEG · PNG · WebP"); display:block;
+  margin-top:6px; font-size:.88rem; color:var(--muted); }
+[data-testid="stFileUploaderDropzone"] [data-testid="stBaseButton-secondary"] { font-size:0 !important; min-height:44px;
+  padding:0 22px !important; }
+[data-testid="stFileUploaderDropzone"] [data-testid="stBaseButton-secondary"] > * { display:none !important; }
+[data-testid="stFileUploaderDropzone"] [data-testid="stBaseButton-secondary"]::after { content:"Chọn ảnh"; font-size:.98rem;
+  font-weight:700; color:var(--text); }
+[data-testid="stFileChipDeleteBtn"] button, [data-testid="stBaseButton-borderlessIcon"] { color:var(--text) !important; }
+/* đã có ảnh: GIỮ ô lớn (không thu lại) + dòng hướng dẫn thay ảnh; ẩn chip tên/dung lượng tệp (ADR-032) — xoá ảnh bằng
+   nút "Xóa ảnh" của trang */
+[data-testid="stFileUploaderDropzone"]:has([data-testid="stFileChips"])::after { content:"Kéo thả ảnh khác vào đây hoặc bấm vào ô để thay ảnh";
+  order:1; display:block; font-size:1rem; font-weight:800; color:var(--text); }
+[data-testid="stFileUploaderDropzone"] [data-testid="stFileChips"] { display:none !important; }
+
+/* ---------- cảnh báo / thông tin (giữ ngữ nghĩa của Streamlit, đổi màu theo token) ---------- */
+[data-testid="stAlert"] { border-radius:14px !important; border:var(--bw) solid var(--border) !important; }
+[data-testid="stAlert"] *, [data-testid="stAlertContainer"] * { color:inherit !important; }
+[data-testid="stAlert"]:has([data-testid="stAlertContentInfo"]) { background:var(--info-tint) !important; color:var(--info-ink) !important; border-color:var(--info-border) !important; }
+[data-testid="stAlert"]:has([data-testid="stAlertContentWarning"]) { background:var(--warning-tint) !important; color:var(--warning-ink) !important; border-color:var(--warning-border) !important; }
+[data-testid="stAlert"]:has([data-testid="stAlertContentError"]) { background:var(--danger-tint) !important; color:var(--danger-ink) !important; border-color:var(--danger-border) !important; }
+[data-testid="stAlert"]:has([data-testid="stAlertContentSuccess"]) { background:var(--success-tint) !important; color:var(--success-ink) !important; border-color:var(--success-border) !important; }
+[data-testid="stSpinner"], [data-testid="stSpinner"] * { color:var(--text) !important; }
+[data-testid="stExpander"] details { background:var(--surface) !important; border:var(--bw) solid var(--border) !important; border-radius:14px !important; }
+[data-testid="stExpander"] summary, [data-testid="stExpander"] summary * { color:var(--text) !important; font-weight:700; }
+/* hover/focus/active mặc định của Streamlit là nền sáng → ở chế độ Tối chữ sáng biến mất. Đặt nền tường
+   minh cho MỌI trạng thái: mặc định/đã focus sau khi bấm = trong suốt; hover, focus bằng phím, đang nhấn = brand-soft. */
+[data-testid="stExpander"] summary, [data-testid="stExpander"] summary:focus, [data-testid="stExpander"] summary:focus:not(:focus-visible) { background:transparent !important; border-radius:12px; }
+[data-testid="stExpander"] summary:hover, [data-testid="stExpander"] summary:focus-visible, [data-testid="stExpander"] summary:active { background:var(--brand-soft) !important; }
+
+[data-testid="stMarkdownContainer"] code, [data-testid="stCaptionContainer"] code { background:var(--surface2) !important; color:var(--text) !important; border-radius:6px; padding:1px 6px; }
+
+/* ---------- ảnh ---------- */
+[data-testid="stImage"] img { border-radius:14px; border:var(--bw) solid var(--border); background:var(--surface2); }
+
+/* ---------- kết quả trực quan (slide 19) ----------
+   Mỗi mặt một hàng ô cùng cỡ; nhãn dự đoán ở trên, tên ô ở dưới; ô thiếu dữ liệu vẫn vuông, ghi lý do */
+.mx-vis-top { min-height:1.6em; font-size:.9rem; font-weight:800; color:var(--text); text-align:center; margin-bottom:4px; }
+.mx-vis-cap { margin-top:4px; font-size:.86rem; font-weight:800; color:var(--text); text-align:center; }
+.mx-vis-miss { aspect-ratio:1/1; width:100%; display:flex; align-items:center; justify-content:center; padding:10px;
+  border:1px dashed var(--border-strong); border-radius:var(--radius); background:var(--surface2);
+  font-size:.8rem; line-height:1.35; color:var(--text); text-align:center; }
+
+/* ---------- chú thích (tooltip) ---------- */
+/* biểu tượng dấu hỏi (help=) cạnh nhãn: mặc định xám nhạt gần như mất ở chế độ Tối */
+[data-testid*="ooltip"] svg { fill:var(--muted) !important; color:var(--muted) !important; opacity:1 !important; }
+[data-testid="stTooltipContent"], [data-baseweb="tooltip"], [role="tooltip"] {
+  background:var(--surface) !important; color:var(--text) !important;
+  border:var(--bw) solid var(--border) !important;
+}
+[data-testid="stTooltipContent"] *, [data-baseweb="tooltip"] *, [role="tooltip"] * {
+  color:var(--text) !important;
+}
+@media (max-width:900px) {
+  [data-testid="stMainBlockContainer"] { padding:1rem 1rem 3rem; }
+}

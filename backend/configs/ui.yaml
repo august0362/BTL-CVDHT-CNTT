@@ -1,0 +1,5 @@
+# Giao diện web (frontend/app.py đọc). Sửa file rồi tải lại trang là có hiệu lực, không cần khởi động lại web.
+
+# true  ⇒ hiện xác suất top-1 cạnh nhãn dự đoán của POSTER / MA3D-Net (vd "Tức giận · 89%")
+# false ⇒ chỉ hiện nhãn (vd "Tức giận")
+show_probability: false

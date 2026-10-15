@@ -19,7 +19,7 @@ except ImportError:
     print("SKIP test_m7_expanded_acceptance: Streamlit is unavailable (use venv web)")
     raise SystemExit(0)
 
-from test_app_ui import md, png
+from test_app_ui import md, png, settle
 from web import predata_experiment
 
 APP = str(ROOT / "frontend" / "app.py")
@@ -118,7 +118,7 @@ def _upload(at: AppTest, name: str = "group.png") -> AppTest:
     assert not at.exception, [error.value for error in at.exception]
     at.file_uploader[0].upload(name, png(), "image/png").run()
     assert not at.exception, [error.value for error in at.exception]
-    return at
+    return settle(at)
 
 
 def _run_count(count: int) -> tuple[AppTest, _Harness]:
@@ -137,6 +137,8 @@ def _assert_single_route(count: int) -> None:
         assert harness.calls["prepare"] == 1
         assert len(harness.calls["analyze"]) == 1
         assert harness.calls["analyze"][0]["max_faces"] == 1
+        assert harness.calls["analyze"][0]["emoca"]["mode"] == "real"
+        assert harness.calls["analyze"][0]["engine_mode"] == "real"
         assert harness.calls["multi"] == []
         text = md(at)
         assert "Multi-Object Analysis" not in text
@@ -161,9 +163,11 @@ def test_two_faces_render_only_compact_multi_cards():
     try:
         text = md(at)
         assert harness.calls["analyze"] == [] and len(harness.calls["multi"]) == 1
-        assert "Face #1" in text and "Face #2" in text
-        assert text.count("mx-face-prediction") >= 2 and "Happy" in text and "%" in text
-        for absent in ("class=\"mx-vis-cap\"", "Kết quả trực quan — MA3D + pre-data",
+        assert harness.calls["multi"][0]["emoca"]["mode"] == "real"
+        assert harness.calls["multi"][0]["engine_mode"] == "real"
+        assert text.count('class="mx-vis-cap"') == 10, text
+        assert "Face #" not in text and "Happy" in text
+        for absent in ("Kết quả trực quan — MA3D + pre-data",
                        "So sánh biểu cảm", "Hình học khuôn mặt", "Radar Chart", "mx-radar"):
             assert absent not in text, absent
         assert not any("Multi-Object Analysis" in button.label for button in at.button)
@@ -176,8 +180,7 @@ def test_thirty_faces_render_in_stable_order():
     at, harness = _run_count(30)
     try:
         text = md(at)
-        positions = [text.index(f"Face #{index}") for index in range(1, 31)]
-        assert positions == sorted(positions)
+        assert text.count('class="mx-vis-cap"') == 150
         assert len(harness.calls["multi"]) == 1 and harness.calls["analyze"] == []
     finally:
         harness.close()
@@ -188,8 +191,7 @@ def test_automatic_analysis_runs_once_across_unrelated_reruns():
     at, harness = _run_count(2)
     try:
         assert len(harness.calls["multi"]) == 1
-        at.toggle(key="pref_still").set_value(True).run()
-        at.toggle(key="pref_lm").set_value(True).run()
+        at.run()
         assert not at.exception, [error.value for error in at.exception]
         assert len(harness.calls["multi"]) == 1 and harness.calls["prepare"] == 1
     finally:
@@ -203,8 +205,7 @@ def test_failed_multi_analysis_is_cached_until_explicit_retry():
         at = _upload(AppTest.from_file(APP, default_timeout=90))
         assert len(harness.calls["multi"]) == 1
         assert any("fake multi analysis failure" in error.value for error in at.error)
-        at.toggle(key="pref_still").set_value(True).run()
-        at.toggle(key="pref_lm").set_value(True).run()
+        at.run()
         assert len(harness.calls["multi"]) == 1 and harness.calls["prepare"] == 1
         [button for button in at.button if button.label == "Phân tích lại"][0].click().run()
         assert not at.exception, [error.value for error in at.exception]
@@ -214,8 +215,7 @@ def test_failed_multi_analysis_is_cached_until_explicit_retry():
     print("PASS failed_multi_analysis_is_cached_until_explicit_retry")
 
 
-def _assert_detector_fallback(*, detector_error: str | None = None, detector_exception: bool = False,
-                              displayed_error: str) -> None:
+def _assert_detector_fallback(*, detector_error: str | None = None, detector_exception: bool = False) -> None:
     harness = _Harness(0, detector_error=detector_error, detector_exception=detector_exception)
     try:
         at = _upload(AppTest.from_file(APP, default_timeout=90))
@@ -223,43 +223,29 @@ def _assert_detector_fallback(*, detector_error: str | None = None, detector_exc
         assert len(harness.calls["analyze"]) == 1 and harness.calls["analyze"][0]["max_faces"] == 1
         assert harness.calls["multi"] == []
         assert any("YOLO không hoàn tất" in warning.value for warning in at.warning)
-        assert "đang dùng luồng baseline trên ảnh gốc" in "\n".join(warning.value for warning in at.warning)
-        assert displayed_error in "\n".join(item.value for item in at.caption)
+        assert "đã phân tích trên ảnh gốc." in "\n".join(warning.value for warning in at.warning)
     finally:
         harness.close()
 
 
 def test_detector_error_view_warns_and_falls_back_to_baseline():
-    _assert_detector_fallback(detector_error="YOLO test error", displayed_error="YOLO test error")
+    _assert_detector_fallback(detector_error="YOLO test error")
     print("PASS detector_error_view_warns_and_falls_back_to_baseline")
 
 
 def test_detector_exception_warns_and_falls_back_to_baseline():
-    _assert_detector_fallback(detector_exception=True, displayed_error="RuntimeError: fake detector exception")
+    _assert_detector_fallback(detector_exception=True)
     print("PASS detector_exception_warns_and_falls_back_to_baseline")
 
 
-def test_face_details_route_and_unknown_id():
-    at, harness = _run_count(2)
-    try:
-        assert len(harness.calls["multi"]) == 1
-        at.query_params["page"] = "face-details"
-        at.query_params["face_id"] = "2"
-        at.run()
-        text = md(at) + "\n" + "\n".join(item.value for item in at.caption)
-        assert not at.exception, [error.value for error in at.exception]
-        assert "Face #2 — Details" in text
-        image_captions = [image_proto.caption for item in at.image for image_proto in item.proto.imgs]
-        assert "Vị trí trong ảnh gốc" in image_captions
-        assert "YOLO crop từ ảnh gốc" in image_captions
-        assert "BBox ảnh gốc" in text and "Confidence: 0.909" in text and "MA3D Happy 2" in text
-        at.query_params["face_id"] = "999"
-        at.run()
-        assert not at.exception, [error.value for error in at.exception]
-        assert any("Không còn dữ liệu khuôn mặt #999" in error.value for error in at.error)
-    finally:
-        harness.close()
-    print("PASS face_details_route_and_unknown_id")
+def test_unknown_query_param_is_ignored():
+    at = AppTest.from_file(APP, default_timeout=90)
+    at.query_params["page"] = "face-details"
+    at.run()
+    assert not at.exception, [error.value for error in at.exception]
+    assert "Face #2 — Details" not in md(at)
+    assert "page=face-details" not in md(at)
+    print("PASS unknown_query_param_is_ignored")
 
 
 def test_multiface_flow_never_saves_images_to_disk():
@@ -292,7 +278,7 @@ def main():
     test_failed_multi_analysis_is_cached_until_explicit_retry()
     test_detector_error_view_warns_and_falls_back_to_baseline()
     test_detector_exception_warns_and_falls_back_to_baseline()
-    test_face_details_route_and_unknown_id()
+    test_unknown_query_param_is_ignored()
     test_multiface_flow_never_saves_images_to_disk()
     print("ALL PASS")
 

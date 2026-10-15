@@ -167,19 +167,11 @@ def execute_flow(orchestrator, memory: Callable[[], dict[str, float]], health: d
         raise RuntimeError("The zero-face preflight did not initialize the lazy RealESRGAN model.")
     mark("d_zero_face_lazy_realesrgan", started)
 
-    started = time.perf_counter()
-    frontal = orchestrator.run_frontalization_experiment(
-        views_two, emoca=settings, engine_mode="real")
-    mark("e_m8_roll_experiment", started)
-    if "3DDFA-V2" not in results[-1]["models_loaded"]:
-        raise RuntimeError("The M8 roll experiment did not load 3DDFA-V2.")
-
     return {"status": "ok", "emoca": {"url": EMOCA_URL, "health_status": health.get("status"),
                                          "mode": health.get("mode")},
             "inputs": {"single_face": samples[0].name, "two_face_sources": [samples[0].name, samples[1].name],
                        "two_face_canvas_px": list(two_face_image.size), "images_written": False},
-            "steps": results,
-            "frontalization": {"result_kind": frontal.get("kind") if isinstance(frontal, dict) else type(frontal).__name__}}
+            "steps": results}
 
 
 def _png_bytes(image: Image.Image) -> bytes:
@@ -212,18 +204,12 @@ def self_test() -> dict:
             faces = fake_faces_one if image.size == (80, 60) else fake_faces_two
         return SimpleNamespace(faces=faces)
 
-    def fake_frontal(views, **kw):
-        events.append(("frontal", kw))
-        fake_loaded.append("3DDFA-V2")
-        return {"kind": "ok"}
-
     fake = SimpleNamespace(
         prepare_multiface_views=fake_prepare,
         analyze=lambda image, **kw: events.append(("analyze", kw)) or fake_prediction_result(
             ["poster_rafdb", "ma3d_rafdb"]),
         analyze_multiface=lambda image, **kw: events.append(("multi", kw)) or {"kind": "faces", "rows": [
             {"face_id": i, "result": fake_prediction_result(["ma3d_rafdb"])} for i in (1, 2)]},
-        run_frontalization_experiment=fake_frontal,
         engine=SimpleNamespace(_REAL_MODELS={}),
     )
     old_images, old_memory, old_loaded = dataset_images, memory_snapshot, loaded_models
@@ -246,9 +232,9 @@ def self_test() -> dict:
         loaded_models = old_loaded
     names = [step["step"] for step in payload["steps"]]
     expected = ["a_import_orchestrator_no_models_loaded", "b_single_face", "c_multi_face",
-                "d_zero_face_lazy_realesrgan", "e_m8_roll_experiment"]
+                "d_zero_face_lazy_realesrgan"]
     assert names == expected, names
-    assert [event[0] for event in events] == ["prepare", "analyze", "prepare", "multi", "prepare", "analyze", "frontal"]
+    assert [event[0] for event in events] == ["prepare", "analyze", "prepare", "multi", "prepare", "analyze"]
     assert events[1][1] == {"emoca": {"mode": "real", "url": EMOCA_URL, "timeout_s": 90},
                             "engine_mode": "real", "max_faces": 1}
     assert events[3][1]["views"].faces == fake_faces_two

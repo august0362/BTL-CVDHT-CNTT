@@ -1,4 +1,4 @@
-"""CPU 3DDFA-V2 face frontalization for the opt-in web experiment."""
+"""Ước lượng roll bằng 3DDFA-V2 cho bước sửa roll của luồng chính."""
 from __future__ import annotations
 
 from dataclasses import dataclass

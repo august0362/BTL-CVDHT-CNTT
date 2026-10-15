@@ -1,6 +1,5 @@
-"""venv web: 3DDFA-V2 model and in-memory experiment checks."""
+"""venv web: kiểm tra mô hình 3DDFA-V2 và sửa roll của luồng chính."""
 from __future__ import annotations
-import io
 import sys
 from pathlib import Path
 from types import SimpleNamespace
@@ -121,35 +120,8 @@ def test_baseline_roll_corrects_original_upload():
     print(f"PASS baseline_roll_corrects_original_upload rotation={info['rotation_deg']:.1f}° residual={residual:.1f}°")
 
 
-def test_orchestration_fakes():
-    from web import frontalize_experiment as experiment
-    import web.orchestrator as orchestrator
-    crops=[Image.new("RGB",(48,64),(i*70,80,70)) for i in (1,2)]
-    views=SimpleNamespace(faces=[SimpleNamespace(face_id=i,detection=SimpleNamespace(cropped_face=crops[i-1])) for i in (1,2)])
-    calls=[];events=[];original_save=Image.Image.save
-    class FakeFrontalizer:
-        def correct_roll(self,image,threshold_deg):
-            return SimpleNamespace(image=image.copy(),yaw_deg=30.,pitch_deg=0.,roll_deg=25.,
-                                   applied=True,rotation_deg=-25.,threshold_deg=threshold_deg,time_ms=3.)
-    def guarded_save(self,fp,*args,**kwargs):
-        if not isinstance(fp,io.BytesIO):raise AssertionError("image written outside memory")
-        return original_save(self,fp,*args,**kwargs)
-    def analyze(data,**kwargs):
-        image=Image.open(io.BytesIO(data));calls.append(image.size);events.append(("analyze",image.getpixel((0,0))[0]))
-        if len(calls)==3:raise RuntimeError("one branch failed")
-        return {"faces":[]}
-    with patch("services.frontalization.get_tddfa_v2_frontalizer",return_value=FakeFrontalizer()), \
-         patch.object(orchestrator,"analyze",side_effect=analyze),patch.object(Image.Image,"save",guarded_save):
-        state=experiment.run_frontalization_experiment(views,emoca={"mode":"real"},engine_mode="real")
-    assert len(state["rows"])==2 and len(calls)==4
-    assert state["rows"][1]["errors"] and state["rows"][1]["result_after"]=={"faces":[]}
-    assert calls==[(48,64)]*4
-    assert events==[("analyze",color) for color in (70,70,140,140)]
-    print("PASS orchestration_fakes")
-
-
 def main():
     test_bad_inputs();test_synthetic_network_and_warp();test_roll_only_rotation_sign_and_below_threshold()
     test_baseline_roll_corrects_original_upload()
-    test_orchestration_fakes();print("ALL PASS")
+    print("ALL PASS")
 if __name__=="__main__":main()

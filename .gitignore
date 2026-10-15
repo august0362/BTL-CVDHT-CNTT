@@ -61,9 +61,10 @@ documents/docs/qa/UI_LOADING_NARROW_2026-09-25/real_spinner_1440.png
 # Docker / local tooling
 .env
 .codex/
-pipeline_visualizer/samples/*.jpg
 
-# Pipeline Studio: module cục bộ, không đưa lên GitHub (người dùng yêu cầu 2026-10-15)
-frontend/pipeline_studio.py
-frontend/pipeline_visualizer/
-pipeline_visualizer/
+# M9 benchmark: licensed datasets, results and Kaggle bundle stay local
+another/kaggle/benchmark_preprocessing_m9/data/raw/
+another/kaggle/benchmark_preprocessing_m9/data/images/
+another/kaggle/benchmark_preprocessing_m9/data/processed/
+another/kaggle/benchmark_preprocessing_m9/results/
+another/kaggle/benchmark_preprocessing_m9/dist/

@@ -17,26 +17,6 @@ class _General:
         return Image.eval(image, lambda value: 255 - value)
 
 
-class _Detector:
-    def process(self, image):
-        return _detection(image, image.getpixel((0, 0))[0])
-
-
-def test_detector_crop_pixels_are_taken_from_original_not_enhanced(monkeypatch):
-    stack = predata._ModelStack(general=_General(), detector=_Detector())
-    monkeypatch.setattr(predata, "_get_model_stack", lambda: stack)
-    source = Image.new("RGB", (8, 6))
-    for y in range(6):
-        for x in range(8):
-            source.putpixel((x, y), (x * 10, y * 10, x + y))
-
-    result = predata._build_predata_views(source)
-
-    assert result.enhanced_image.getpixel((2, 1)) == tuple(255 - x for x in source.getpixel((2, 1)))
-    assert result.enhanced_detection.cropped_face.tobytes() == source.crop((2, 1, 6, 5)).tobytes()
-    assert result.enhanced_detection.annotated_image.getpixel((2, 1)) != source.getpixel((2, 1))
-
-
 def _source_image():
     source = Image.new("RGB", (8, 6))
     for y in range(6):
