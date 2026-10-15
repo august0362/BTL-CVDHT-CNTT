@@ -49,7 +49,7 @@ call :sleep 5
 call :elapsed_s t_start waited
 call :http_code "%EMOCA_HEALTH%" code
 if "!code!"=="200" goto :emoca_up
-echo [%time%]   cho EMOCA ... !waited!/%EMOCA_WAIT_S% s ^(nap mo hinh ~20 s + lam nong^)
+echo [%time%]   cho EMOCA ... !waited!/%EMOCA_WAIT_S% s ^(nap mo hinh ~20s^)
 if !waited! lss %EMOCA_WAIT_S% goto :wait_emoca
 echo [CANH BAO] EMOCA chua len sau %EMOCA_WAIT_S% s - web se chay che do GIA LAP.
 echo            Xem log trong WSL: tail -n 50 ~/emoca_wsl/out/run_server_bat.log

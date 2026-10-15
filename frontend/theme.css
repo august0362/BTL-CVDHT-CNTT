@@ -18,7 +18,8 @@ html, body, .stApp, [data-testid="stApp"], [data-testid="stAppViewContainer"], [
   background:var(--bg) !important; color:var(--text) !important; font-family:$font_stack !important;
 }
 * { transition-duration:var(--motion) !important; animation-duration:var(--motion) !important; }
-[data-testid="stHeader"] { background:transparent !important; }
+[data-testid="stHeader"] { background:transparent !important; height:0 !important; pointer-events:none; }
+[data-testid="stHeader"] button { pointer-events:auto; }
 [data-testid="stHeader"] button, [data-testid="stHeader"] svg { color:var(--text) !important; fill:var(--text) !important; }
 [data-testid="stToolbar"], [data-testid="stAppDeployButton"], [data-testid="stMainMenu"], #MainMenu, footer { display:none !important; }
 [data-testid="stElementContainer"]:has(> [data-testid="stMarkdown"] style) { display:none !important; }
@@ -70,11 +71,13 @@ div[data-testid="stVerticalBlockBorderWrapper"] div[data-testid="stVerticalBlock
 .mx-sec-s { font-size:.86rem; color:var(--muted); margin-top:2px; }
 
 /* ---------- nút ---------- */
-[data-testid="stBaseButton-secondary"], [data-testid="stBaseButton-primary"] {
+[data-testid="stBaseButton-secondary"], [data-testid="stBaseButton-primary"], [data-testid="stPopoverButton"] {
   border-radius:999px !important; font-weight:700 !important; padding:.5rem 1.2rem !important; box-shadow:none !important;
   background:var(--surface) !important; color:var(--text) !important; border:var(--bw) solid var(--border-strong) !important; }
-[data-testid="stBaseButton-secondary"] *, [data-testid="stBaseButton-primary"] * { color:inherit !important; }
-[data-testid="stBaseButton-secondary"]:hover { border-color:var(--brand) !important; background:var(--brand-soft) !important; }
+[data-testid="stBaseButton-secondary"] *, [data-testid="stBaseButton-primary"] *,
+[data-testid="stPopoverButton"] * { color:inherit !important; }
+[data-testid="stBaseButton-secondary"]:hover, [data-testid="stPopoverButton"]:hover {
+  border-color:var(--brand) !important; background:var(--brand-soft) !important; }
 [data-testid="stBaseButton-primary"] { background:var(--brand) !important; color:var(--on-brand) !important; border-color:var(--brand) !important; }
 /* nhãn nút nằm trong <p> của markdown → phải nhắm trực tiếp, nếu không sẽ bị quy tắc màu chữ chung ghi đè */
 [data-testid="stBaseButton-primary"] p, [data-testid="stBaseButton-primary"] span,
@@ -232,11 +235,21 @@ div:has(> [role="listbox"]) { background:var(--surface) !important; border:var(-
 /* ---------- bảng cài đặt ---------- */
 /* biểu tượng dấu hỏi (help=) cạnh nhãn: mặc định xám nhạt gần như mất ở chế độ Tối */
 [data-testid*="ooltip"] svg { fill:var(--muted) !important; color:var(--muted) !important; opacity:1 !important; }
-/* nằm ở đầu trang trong một expander "Cài đặt" (không dùng thanh bên: thu gọn rồi thì không mở lại được).
-   Nền/chữ/hover của tiêu đề mở-đóng dùng chung quy tắc stExpander ở trên; ở đây chỉ làm nó trông như một nút. */
-.st-key-ui_settings_open summary { padding-top:12px !important; padding-bottom:12px !important; }
-.st-key-ui_settings_open summary, .st-key-ui_settings_open summary * { font-size:1.02rem; font-weight:800; }
-.st-key-ui_settings_open .mx-set-h:first-child { margin-top:4px; }
+[data-testid="stTooltipContent"], [data-baseweb="tooltip"], [role="tooltip"] {
+  background:var(--surface) !important; color:var(--text) !important;
+  border:var(--bw) solid var(--border) !important;
+}
+[data-testid="stTooltipContent"] *, [data-baseweb="tooltip"] *, [role="tooltip"] * {
+  color:var(--text) !important;
+}
+/* Popover được Streamlit đưa ra ngoài cây .stApp: nhận token từ :root như màn hình chính. */
+[data-testid="stPopoverBody"] {
+  background:var(--surface) !important; color:var(--text) !important; color-scheme:$scheme;
+  border:var(--bw) solid var(--border) !important; border-radius:var(--radius) !important;
+  box-shadow:var(--shadow) !important; width:min(960px, calc(100vw - 32px)) !important;
+  max-width:calc(100vw - 32px) !important; max-height:85vh; overflow-y:auto;
+}
+[data-testid="stPopoverBody"] .mx-set-h:first-child { margin-top:4px; }
 .mx-set-h { display:flex; align-items:center; gap:8px; margin:16px 0 8px; font-size:.78rem; font-weight:850; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); }
 .mx-set-title { display:flex; align-items:center; gap:12px; margin:4px 0 6px; font-size:1.2rem; font-weight:850; color:var(--text); }
 .mx-swatch { display:flex; height:34px; border-radius:12px; overflow:hidden; border:var(--bw) solid var(--border-strong); margin:6px 0 8px; }

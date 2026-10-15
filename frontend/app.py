@@ -75,8 +75,7 @@ ERROR_HINTS = {
                      "(*_emoca_stats.npz); thiếu một trong hai thì không chạy (cố ý không điền 0 hay dùng mã giả). "
                      "Đọc dòng lỗi phía trên để biết thiếu cái nào. POSTER không bị ảnh hưởng.",
     "contract_mismatch": "Dữ liệu trả về lệch contract. Báo cho nhóm BACKEND/GENERAL.",
-    "consent_required": "Ảnh chưa được gửi đi. Bật ô \"Tôi đồng ý gửi ảnh…\" ở bảng Cài đặt (mục Kết nối EMOCA), "
-                        "hoặc chuyển về Giả lập.",
+    "consent_required": "Ảnh chưa được gửi đi. Bật ô \"Tôi đồng ý gửi ảnh…\" ở Cài đặt → Kết nối EMOCA.",
 }
 
 # Icon nét mảnh (kiểu Feather, MIT) — nhúng trực tiếp, không tải icon từ ngoài.
@@ -231,49 +230,28 @@ def choice(label: str, key: str) -> str:
 
 # ----------------------------------------------------------------------------- kết nối EMOCA (ADR-015)
 # Chỉ giữ trong st.session_state (bộ nhớ phiên): KHÔNG ghi lên địa chỉ trang, vì có token và địa chỉ tunnel.
-EMOCA_MODES = ("mock", "real")
-EMOCA_MODE_LABELS = {"mock": "Giả lập", "real": "Máy chủ EMOCA"}
-
-
-ENGINE_MODES = ("mock", "real")
-ENGINE_MODE_LABELS = {"mock": "Giả lập", "real": "Thật (CPU)"}
-
-
-def _engine_mode_changed() -> None:
-    if st.session_state.get("engine_mode") is None:  # thanh chọn cho phép bỏ chọn ⇒ khôi phục giá trị trước
-        st.session_state["engine_mode"] = st.session_state.get("_last_engine_mode", "mock")
-
-
 def render_engine_panel() -> None:
-    """Chọn POSTER/MA3D-Net giả lập hay chạy thật trên CPU (web/engine.py, M2-05)."""
+    """POSTER/MA3D-Net luôn dùng mô hình thật trên CPU."""
     md('<div class="mx-set-h">Mô hình POSTER / MA3D-Net</div>')
     if resolve_engine_mode is None:
         st.caption("Không có bộ điều phối nên không đặt được chế độ mô hình.")
         return
-    st.segmented_control("Suy luận", ENGINE_MODES, format_func=lambda o: ENGINE_MODE_LABELS[o], key="engine_mode",
-                         on_change=_engine_mode_changed)
-    st.session_state["_last_engine_mode"] = st.session_state.get("engine_mode") or "mock"
-    if st.session_state["_last_engine_mode"] == "real":
-        st.caption("POSTER chạy thật trên CPU trong tiến trình web: lần đầu nạp mô hình vài giây (~1 GB RAM cho hai mô "
-                   "hình), các lần sau nhanh hơn. MA3D-Net chỉ chạy khi mã 3DMM do EMOCA thật sinh ra; với EMOCA giả lập "
-                   "nó báo lỗi thiếu mã — đó là hành vi đúng, không phải hỏng.")
-    else:
-        st.caption("Xác suất và attention là dữ liệu giả, không cần torch.")
+    st.session_state["engine_mode"] = "real"
+    st.caption("Suy luận bằng POSTER / MA3D-Net thật trên CPU. Lần đầu có thể cần thời gian nạp mô hình.")
 
 
 def init_emoca_state() -> None:
     """Lần đầu của phiên: lấy mặc định từ bộ điều phối (biến môi trường EMOCA_* > configs/services.yaml).
     Xác nhận gửi ảnh luôn bắt đầu ở trạng thái CHƯA đồng ý. Cũng đặt mặc định chế độ engine (ENGINE_MODE/config)."""
-    if "engine_mode" not in st.session_state:
-        mode = resolve_engine_mode()[0] if resolve_engine_mode else "mock"
-        st.session_state["engine_mode"] = mode if mode in ENGINE_MODES else "mock"
+    st.session_state["engine_mode"] = "real"
+    st.session_state["emoca_mode"] = "real"
     if st.session_state.get("_emoca_ready"):
         for key in ("emoca_url", "emoca_token", "emoca_consent"):  # widget không được vẽ ở lần chạy này sẽ bị Streamlit xoá
             if key in st.session_state:                             # trạng thái; gán lại để giữ (cách chính thức)
                 st.session_state[key] = st.session_state[key]
         return
     base = emoca_status() if emoca_status else {}
-    st.session_state["emoca_mode"] = base.get("mode") if base.get("mode") in EMOCA_MODES else "mock"
+    st.session_state["emoca_mode"] = "real"
     st.session_state["emoca_url"] = base.get("url", "")
     st.session_state["emoca_token"] = ""
     st.session_state["emoca_consent"] = False
@@ -282,8 +260,6 @@ def init_emoca_state() -> None:
 
 def emoca_overrides() -> dict:
     """Cài đặt EMOCA hiện tại của phiên → tham số `emoca=` của analyze()."""
-    if (st.session_state.get("emoca_mode") or "mock") != "real":
-        return {"mode": "mock"}
     return {"mode": "real", "url": (st.session_state.get("emoca_url") or "").strip(),
             "token": st.session_state.get("emoca_token") or "",
             "remote_consent": bool(st.session_state.get("emoca_consent"))}
@@ -297,8 +273,7 @@ def emoca_signature() -> tuple:
 
 def _emoca_settings_changed(restore_mode: bool = False) -> None:
     """Đổi chế độ hoặc địa chỉ ⇒ thu hồi xác nhận gửi ảnh (không thể đồng ý cho máy A rồi ngầm gửi sang máy B)."""
-    if restore_mode and st.session_state.get("emoca_mode") is None:  # thanh chọn cho phép bỏ chọn
-        st.session_state["emoca_mode"] = st.session_state.get("_last_emoca_mode", "mock")
+    st.session_state["emoca_mode"] = "real"
     st.session_state["emoca_consent"] = False
     st.session_state.pop("emoca_check", None)
 
@@ -308,12 +283,8 @@ def render_emoca_panel() -> None:
     if emoca_status is None:
         st.caption("Không có bộ điều phối nên không đặt được nguồn EMOCA.")
         return
-    st.segmented_control("Nguồn EMOCA", EMOCA_MODES, format_func=lambda o: EMOCA_MODE_LABELS[o], key="emoca_mode",
-                         on_change=_emoca_settings_changed, args=(True,))
-    st.session_state["_last_emoca_mode"] = st.session_state.get("emoca_mode") or "mock"
-    if st.session_state["_last_emoca_mode"] != "real":
-        st.caption("Landmark, mã 3DMM và ảnh dựng đều là dữ liệu giả; ảnh không đi đâu cả.")
-        return
+    st.session_state["emoca_mode"] = "real"
+    st.caption("Nguồn EMOCA thật. Cấu hình địa chỉ máy chủ bên dưới.")
     st.text_input("Địa chỉ EMOCA", key="emoca_url", placeholder="https://….trycloudflare.com",
                   on_change=_emoca_settings_changed,
                   help="In ra ở cuối notebook Colab (another/notebooks/emoca_colab.ipynb); đổi mỗi phiên Colab.")
@@ -341,42 +312,43 @@ def render_emoca_panel() -> None:
 
 
 def render_settings(palettes: list, default_theme: str, problems: list[str], label_problems: list[str]) -> None:
-    """Bảng Cài đặt ở đầu trang, mở/đóng bằng nút "Cài đặt" (không dùng thanh bên: thu gọn rồi thì không mở lại được).
-    Expander luôn vẽ các widget bên trong kể cả khi đóng ⇒ Streamlit không xoá trạng thái của chúng."""
+    """Cài đặt gọn trong popover neo ở góc trên bên phải."""
     by_id = {p.id: p for p in palettes}
-    with st.expander("Cài đặt", icon=":material/settings:", key="ui_settings_open"):
-        c_look, c_view, c_link = st.columns(3, gap="large")
-    with c_look:
-        md('<div class="mx-set-h">Giao diện</div>')
-        st.selectbox("Chủ đề màu", list(by_id), format_func=lambda i: by_id[i].name, key="pref_theme",
-                     help="Mỗi chủ đề lấy 4 màu từ một ảnh trong frontend/assets/theme.")
-        pal = by_id[st.session_state["pref_theme"]]
-        swatch = "".join(f'<i style="background:{c}" title="{c}"></i>' for c in pal.colors)
-        md(f'<div class="mx-swatch" role="img" aria-label="Bảng màu: {esc(", ".join(pal.colors))}">{swatch}</div>'
-           f'<div class="mx-mood"><b>{esc(pal.family)}</b> · {esc(pal.mood)}</div>')
-        choice("Chế độ", "pref_mode")
-        choice("Độ tương phản", "pref_level")
-        choice("Cỡ chữ", "pref_font")
-        st.toggle("Giảm chuyển động", key="pref_still", help="Tắt hiệu ứng chuyển mượt.")
-    with c_view:
-        md('<div class="mx-set-h">Hiển thị</div>')
-        st.toggle("Hiện landmark trên ảnh", key="pref_lm")
-        st.toggle("Hiện khung mặt", key="pref_bb")
-        st.toggle("Hiện ảnh trung gian & attention", key="pref_att")
-        render_engine_panel()
-        if PIPELINE_STUDIO_AVAILABLE and st.button("✦ Pipeline Studio", key="open_pipeline_studio", help="Mở canvas trực quan hoá pipeline"):
-            st.query_params["page"] = "pipeline-studio"
-            st.rerun()
-    with c_link:
-        render_emoca_panel()
-        md('<div class="mx-set-h">Khác</div>')
-        st.button("Đặt lại cài đặt", on_click=_reset_prefs, args=(default_theme,), key="btn_reset")
-        if problems or label_problems:  # Streamlit cấm expander lồng expander ⇒ liệt kê thẳng
-            md(f'<div class="mx-set-h">Ghi chú nguồn màu ({len(problems) + len(label_problems)})</div>')
-            for line in problems + label_problems:
-                st.caption(line)
-        md(f'<div class="mx-mood">{len(palettes)} chủ đề từ <b>frontend/assets/theme</b>. Màu chữ, nút, viền được tự chỉnh '
-           'để đạt độ tương phản WCAG.</div>')
+    _, settings_button = st.columns([12, 1])
+    with settings_button:
+        with st.popover("⚙", help="Cài đặt", use_container_width=True):
+            c_look, c_view, c_link = st.columns(3, gap="large")
+            with c_look:
+                md('<div class="mx-set-h">Giao diện</div>')
+                st.selectbox("Chủ đề màu", list(by_id), format_func=lambda i: by_id[i].name, key="pref_theme",
+                             help="Mỗi chủ đề lấy 4 màu từ một ảnh trong frontend/assets/theme.")
+                pal = by_id[st.session_state["pref_theme"]]
+                swatch = "".join(f'<i style="background:{c}" title="{c}"></i>' for c in pal.colors)
+                md(f'<div class="mx-swatch" role="img" aria-label="Bảng màu: {esc(", ".join(pal.colors))}">{swatch}</div>'
+                   f'<div class="mx-mood"><b>{esc(pal.family)}</b> · {esc(pal.mood)}</div>')
+                choice("Chế độ", "pref_mode")
+                choice("Độ tương phản", "pref_level")
+                choice("Cỡ chữ", "pref_font")
+                st.toggle("Giảm chuyển động", key="pref_still", help="Tắt hiệu ứng chuyển mượt.")
+            with c_view:
+                md('<div class="mx-set-h">Hiển thị</div>')
+                st.toggle("Hiện landmark trên ảnh", key="pref_lm")
+                st.toggle("Hiện khung mặt", key="pref_bb")
+                st.toggle("Hiện ảnh trung gian & attention", key="pref_att")
+                render_engine_panel()
+                if PIPELINE_STUDIO_AVAILABLE and st.button("✦ Pipeline Studio", key="open_pipeline_studio", help="Mở canvas trực quan hoá pipeline"):
+                    st.query_params["page"] = "pipeline-studio"
+                    st.rerun()
+            with c_link:
+                render_emoca_panel()
+                md('<div class="mx-set-h">Khác</div>')
+                st.button("Đặt lại cài đặt", on_click=_reset_prefs, args=(default_theme,), key="btn_reset")
+                if problems or label_problems:
+                    md(f'<div class="mx-set-h">Ghi chú nguồn màu ({len(problems) + len(label_problems)})</div>')
+                    for line in problems + label_problems:
+                        st.caption(line)
+                md(f'<div class="mx-mood">{len(palettes)} chủ đề từ <b>frontend/assets/theme</b>. Màu chữ, nút, viền được tự chỉnh '
+                   'để đạt độ tương phản WCAG.</div>')
 
 
 # ----------------------------------------------------------------------------- helpers
@@ -1143,12 +1115,17 @@ def main():
     mode = st.session_state.get("pref_mode") or DEFAULT_PREFS["pref_mode"]
     level = st.session_state.get("pref_level") or DEFAULT_PREFS["pref_level"]
     font = st.session_state.get("pref_font") or DEFAULT_PREFS["pref_font"]
-    tokens = mx.derive_tokens(palette.colors, mode, level)
+    studio_page = PIPELINE_STUDIO_AVAILABLE and st.query_params.get("page") == "pipeline-studio"
+    # Studio giữ nền đen; toàn bộ widget và popover phải nhận cùng token tối.
+    tokens = mx.derive_tokens(palette.colors, "dark" if studio_page else mode, level)
+    if studio_page:
+        tokens["bg"] = "#000000"
     md(f"<style>{mx.build_css(tokens, font, bool(st.session_state.get('pref_still')))}\n{upload_hint_css()}</style>")
 
     header_slot = st.empty()  # cập nhật ngay khi có kết quả, không đợi lần chạy sau
     sync_query_params()
-    if PIPELINE_STUDIO_AVAILABLE and st.query_params.get("page") == "pipeline-studio":
+    render_settings(palettes, default_theme, list(palette_problems), list(label_problems))
+    if studio_page:
         if ORCHESTRATOR_ERROR:
             st.error(f"Không nạp được pipeline: {ORCHESTRATOR_ERROR}")
             return
@@ -1165,8 +1142,6 @@ def main():
             reduce_motion=bool(st.session_state.get("pref_still")),
         )
         return
-
-    render_settings(palettes, default_theme, list(palette_problems), list(label_problems))  # ngay dưới tiêu đề
 
     cached = st.session_state.get("result")
     steps_slot = st.empty()
