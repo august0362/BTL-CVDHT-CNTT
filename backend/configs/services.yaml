@@ -1,0 +1,38 @@
+# configs/services.yaml — Cấu hình dịch vụ
+# Chủ sở hữu: 02_CONFIG_METRICS. Hình dạng theo CONTRACTS_ADR.md Phần C, đã rút theo ADR-012:
+# không còn ma3d_svc (POSTER/MA3D gọi trực tiếp trong web/engine.py).
+# web/orchestrator.py đọc mục `emoca_svc` (mode, url, timeout_s) và `limits`; services/emoca_svc/{mock_server,server}.py
+# đọc host/port + limits. Thứ tự ưu tiên phía web: giao diện > hằng _EMOCA_MODE > biến môi trường
+# EMOCA_MODE / EMOCA_URL / EMOCA_TOKEN > file này. KHÔNG ghi token vào file này (dùng EMOCA_TOKEN).
+# Nơi chạy EMOCA thật: WSL2 trên chính máy này (ĐƯỜNG CHÍNH, ADR-018; services/emoca_svc/wsl/run_emoca_server.sh, đo
+# 2026-09-25: docs/qa/E2E_REAL_EMOCA_2026-09-25.md). Colab qua tunnel chỉ là DỰ PHÒNG (ADR-015) — khi đó đặt url/EMOCA_URL
+# sang địa chỉ tunnel.
+
+schema_version: 1
+
+emoca_svc:
+  host: 127.0.0.1          # địa chỉ mà server.py / mock_server.py NGHE — luôn loopback (WSL2: Windows gọi qua chuyển tiếp localhost;
+                           # Colab dự phòng: tunnel nối vào cổng này)
+  port: 8765
+  url: http://127.0.0.1:8765  # địa chỉ mà WEB gọi tới: server WSL2 (ADR-018, loopback ⇒ ảnh không rời máy, không cần xác nhận).
+                           # Dự phòng Colab: https://xxxx.trycloudflare.com (không phải loopback ⇒ giao diện đòi xác nhận, ADR-015).
+                           # Chỉ dùng khi mode real; mode mock bỏ qua url.
+  timeout_s: 60            # giây. Đo 2026-09-25 (WSL2, RTX 3050): lần gọi đầu từ web ~27 s (khởi động CUDA/cuDNN), sau đó
+                           # ~0.3-0.5 s (docs/qa/E2E_REAL_EMOCA_2026-09-25.md). Colab dự phòng: lần đầu sau khi nghỉ cũng chậm.
+  mode: mock               # mock | real — real cần url (hoặc EMOCA_URL) trỏ tới server.py đang chạy
+
+engine:                    # POSTER / MA3D-Net chạy TRONG tiến trình web (ADR-012), không qua HTTP
+  mode: mock               # mock | real — real cần torch + checkpoint (environments/web/requirements-real.txt); suy luận trên CPU, nạp một lần
+                           # (lần đầu vài giây, ~1 GB RAM cho hai mô hình). Ghi đè bằng biến môi trường ENGINE_MODE hoặc ở giao diện.
+                           # MA3D-Net (real) cần rafdb_emoca_stats.npz (đã có, configs/models.yaml) VÀ mã 3DMM từ EMOCA THẬT;
+                           # EMOCA giả lập ⇒ codes_missing (ADR-017, không suy luận trên mã giả). POSTER không cần 3DMM.
+
+limits:
+  max_image_bytes: 10485760   # byte (10 MiB, bằng _FALLBACK_LIMITS ở web/orchestrator.py)
+  max_faces: 30               # trần cứng mỗi ảnh; EMOCA chỉ trả tối đa 30 mặt
+  max_concurrent: 1           # số ảnh xử lý đồng thời (server.py chỉ hỗ trợ 1)
+  min_face_side_px: 32        # mock: cạnh ngắn nhỏ hơn mức này ⇒ no_face; thật: mặt nhỏ hơn mức này ⇒ cảnh báo
+  max_image_side_px: 4096     # pixel; cạnh dài hơn ⇒ image_too_large (chặn ảnh khổng lồ làm tràn RAM/VRAM của máy chủ EMOCA)
+  detect_max_side_px: 1024    # EMOCA thật: dò mặt (S3FD/FAN) trên bản thu cạnh dài ≤ mức này rồi đổi khung về original_px; crop
+                              # vẫn trên ảnh gốc. Đo 2026-09-26: ảnh 2208×2944 ở độ phân giải gốc ⇒ S3FD báo 3 mặt, chọn nhầm
+                              # vùng tóc/trán; 1024 ⇒ đúng 1 mặt, detect 13,7 s → 2,0 s. 0 = không thu.

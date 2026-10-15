@@ -1,0 +1,63 @@
+{
+  "url": "http://127.0.0.1:8599",
+  "image": "model\\emoca\\gdl_apps\\EMOCA\\emoca.png",
+  "tag": "real",
+  "engine_mode": "real (CPU)",
+  "spinner_playwright_visible_ms_after_upload": 901.9,
+  "spinner_dom": {
+    "seen_ms_after_upload": [
+      651.6
+    ],
+    "gone_ms_after_upload": [
+      6507.3
+    ]
+  },
+  "spinner_screenshot": "real_spinner_1440.png",
+  "page_errors_1440": [],
+  "narrow_375": {
+    "closed": {
+      "settings_open_actual": false,
+      "empty": {
+        "viewport": 375,
+        "doc_scroll_width": 375,
+        "h_overflow": false,
+        "offscreen": [],
+        "offscreen_n": 0,
+        "clipped": [],
+        "clipped_n": 0
+      },
+      "result": {
+        "viewport": 375,
+        "doc_scroll_width": 375,
+        "h_overflow": false,
+        "offscreen": [],
+        "offscreen_n": 0,
+        "clipped": [],
+        "clipped_n": 0
+      },
+      "page_errors": []
+    },
+    "open": {
+      "settings_open_actual": true,
+      "empty": {
+        "viewport": 375,
+        "doc_scroll_width": 375,
+        "h_overflow": false,
+        "offscreen": [],
+        "offscreen_n": 0,
+        "clipped": [],
+        "clipped_n": 0
+      },
+      "result": {
+        "viewport": 375,
+        "doc_scroll_width": 375,
+        "h_overflow": false,
+        "offscreen": [],
+        "offscreen_n": 0,
+        "clipped": [],
+        "clipped_n": 0
+      },
+      "page_errors": []
+    }
+  }
+}

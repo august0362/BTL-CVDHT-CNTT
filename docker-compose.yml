@@ -1,0 +1,68 @@
+# MA3D-Net Web Demo — chạy bằng Docker. Hướng dẫn đầy đủ: README.md mục "Chạy bằng Docker".
+#   Đầy đủ (EMOCA thật, cần GPU NVIDIA):  docker compose --profile real up --build
+#   Chỉ giao diện (không GPU):            docker compose --profile mock up --build
+# Mở http://localhost:8599
+# Trọng số web: python environments/docker/download_weights.py. FLAME/EMOCA: đặt ACCEPT_FLAME_EMOCA_LICENSES=1 trong .env.
+
+x-web-weights: &web-weights
+  - ./backend/model/ma3d/checkpoints:/app/backend/model/ma3d/checkpoints:ro
+  - ./backend/model/yolo26_face:/app/backend/model/yolo26_face:ro
+  - ./backend/model/realesr-general-x4v3:/app/backend/model/realesr-general-x4v3:ro
+  - ./backend/model/3ddfa_v2:/app/backend/model/3ddfa_v2:ro
+
+services:
+  emoca:
+    profiles: [real]
+    build:
+      context: .
+      dockerfile: environments/docker/emoca.Dockerfile
+    image: ma3d-demo/emoca:v1
+    environment:
+      - ACCEPT_FLAME_EMOCA_LICENSES=${ACCEPT_FLAME_EMOCA_LICENSES:-0}
+      - EMOCA_CUDNN=${EMOCA_CUDNN:-0}
+    volumes:
+      - emoca_assets:/opt/emoca/assets
+    ports:
+      - "8599:8599"        # cổng của web: web dùng chung network namespace với emoca (xem dưới)
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: "no"
+
+  web:
+    profiles: [real]
+    build:
+      context: .
+      dockerfile: environments/docker/web.Dockerfile
+    image: ma3d-demo/web:v1
+    # Chung network namespace với emoca => web gọi EMOCA qua 127.0.0.1:8765 (loopback: ảnh không rời máy,
+    # không cần token hay xác nhận gửi ảnh ra ngoài — ADR-015/018).
+    network_mode: "service:emoca"
+    depends_on:
+      emoca:
+        condition: service_healthy
+    environment:
+      - EMOCA_MODE=real
+      - EMOCA_URL=http://127.0.0.1:8765
+      - ENGINE_MODE=real
+    volumes: *web-weights
+
+  web-mock:
+    profiles: [mock]
+    build:
+      context: .
+      dockerfile: environments/docker/web.Dockerfile
+    image: ma3d-demo/web:v1
+    ports:
+      - "8599:8599"
+    environment:
+      - EMOCA_MODE=mock
+      - ENGINE_MODE=${ENGINE_MODE:-mock}   # real => POSTER thật (cần checkpoint); MA3D-Net cần EMOCA thật
+    volumes: *web-weights
+
+volumes:
+  emoca_assets:

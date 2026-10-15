@@ -1,0 +1,10 @@
+﻿stage,status,count,error
+realesrgan,ok,3068,
+codeformer_raw,ok,3068,
+codeformer_after_realesrgan,ok,3068,
+emoca_ma3d_realesrgan_codeformer,error,84,no_face: FAN không phát hiện khuôn mặt nào trong ảnh.
+emoca_ma3d_realesrgan_codeformer,ok,2984,
+emoca_ma3d_realesrgan,error,61,no_face: FAN không phát hiện khuôn mặt nào trong ảnh.
+emoca_ma3d_realesrgan,ok,3007,
+emoca_ma3d_codeformer,error,44,no_face: FAN không phát hiện khuôn mặt nào trong ảnh.
+emoca_ma3d_codeformer,ok,3024,

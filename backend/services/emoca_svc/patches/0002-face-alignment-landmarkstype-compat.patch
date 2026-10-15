@@ -1,0 +1,23 @@
+Patch:    0002-face-alignment-landmarkstype-compat
+Upstream: radekd91/emoca @ e0be0db (release/EMOCA_v2)
+Files:    gdl/utils/FaceDetector.py
+Ly do:    face_alignment ban moi doi `LandmarksType._2D` thanh `TWO_D`. `FAN()` (FaceDetector.py:84) duoc
+          `TestData` dung ngay khi khoi tao nen chan demo anh. Ho tro ca hai ten (khac notebook: chi doi cung sang TWO_D).
+
+diff --git a/gdl/utils/FaceDetector.py b/gdl/utils/FaceDetector.py
+index fb17beb..7be3574 100644
+--- a/gdl/utils/FaceDetector.py
++++ b/gdl/utils/FaceDetector.py
+@@ -81,7 +81,11 @@ class FAN(FaceDetector):
+             "filter_threshold": threshold
+         }
+         self.flip_input = False
+-        self.model = face_alignment.FaceAlignment(face_alignment.LandmarksType._2D,
++        # face_alignment >= 1.4 renamed LandmarksType._2D to TWO_D; support both
++        landmarks_type = getattr(face_alignment.LandmarksType, 'TWO_D', None)
++        if landmarks_type is None:
++            landmarks_type = face_alignment.LandmarksType._2D
++        self.model = face_alignment.FaceAlignment(landmarks_type,
+                                                   device=str(device),
+                                                   flip_input=self.flip_input,
+                                                   face_detector=self.face_detector,

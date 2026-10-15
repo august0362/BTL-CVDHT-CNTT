@@ -1,0 +1,182 @@
+# configs/models.yaml — Registry mô hình FER (POSTER / MA3D-Net)
+# Chủ sở hữu: 02_CONFIG_METRICS. Hình dạng theo CONTRACTS_ADR.md Phần C. Kiểm bằng:
+#   python tests/test_configs.py            (nhanh: schema, file tồn tại, shape đầu phân loại)
+#   python tests/test_configs.py --sha256   (thêm: băm lại mọi artifact, ~2.5 GB)
+# Đường dẫn tương đối tính từ gốc dự án (BTL/). Artifact KHÔNG commit (giấy phép/dung lượng).
+
+schema_version: 1
+
+# ---------------------------------------------------------------------------
+# Artifact: mỗi file một mục, có sha256 (đo ở Session 05, đo lại bằng sha256sum ngày 2026-09-24: khớp cả 10).
+# archive_name: tên thư mục gốc bên trong file zip của torch.save — là manh mối về tên gốc khi lưu.
+# ---------------------------------------------------------------------------
+artifacts:
+  ir50:
+    path: model/ma3d/checkpoints/ir50.pth
+    sha256: f696a1d2216439c05dec042b42249a1c835f4a2106b91e14fbf09ed0fbd8acfa
+    bytes: 174472765
+    # Mã gốc nạp "checkpoints/ir50_o1.pth" (model/ma3d/models/MA3D.py:99). Đã kiểm: 304/304 khoá
+    # của ir_back khớp tên + shape. Checkpoint đầy đủ ghi đè ir_back nên file này chỉ cần để dựng lớp.
+  mobilefacenet:
+    path: model/ma3d/checkpoints/mobilefacenet_model_best.pth.tar
+    sha256: b994af026bfddbafc507a6f1c8737a9896bab20ed2b0cfb6ae90b81736970313
+    bytes: 12281146
+    # Mã gốc nạp "checkpoints/mobilefacenet_model_best.pth_o1.tar" (MA3D.py:87). Đã kiểm: 333/333 khoá
+    # trùng; mọi trọng số học được giống từng byte với face_landback.* trong raf_MA3D.pth (khác nhau
+    # chỉ ở 150 buffer running_mean/running_var/num_batches_tracked của BatchNorm).
+  raf_ma3d_ckpt:
+    path: model/ma3d/checkpoints/raf_MA3D.pth
+    sha256: 8721625d74105cd6d61f0d427cbd9f63bb056d416755c8f2ba06ba84203eae95
+    bytes: 307609536
+    state_key: model
+    archive_name: archive
+  raf_poster_ckpt:
+    path: model/ma3d/checkpoints/rafdb_POSTER.pth
+    sha256: cd548425d5fd50495f13c24b14a69971f13112f58024e6e3b80ac89e7c13f0ad
+    bytes: 307610302
+    state_key: model
+    archive_name: raf_ori   # khớp log/raf_POSTER.txt: "checkpoint path: checkpoints/raf_ori.pth"
+  caers_ma3d_ckpt:
+    path: model/ma3d/checkpoints/caers_MA3D.pth
+    sha256: 68dbf829d04c9b4fc7f89626a2917acfadae10d26c40a5bd36edeeed6ae006de
+    bytes: 307609536
+    state_key: model
+    archive_name: archive
+  caers_poster_ckpt:
+    path: model/ma3d/checkpoints/caers_POSTER.pth
+    sha256: 407214fe635d646792a529d54225ca7d9a7c07c272cdb4f12466b8c0328a38c4
+    bytes: 307613564
+    state_key: model
+    archive_name: caers_ori
+  ferplus_ma3d_ckpt:
+    path: model/ma3d/checkpoints/ferplus_MA3D.pth
+    sha256: fac612e332d568ad606d5178f5051639238261656ee67dde01a3e56edc261744
+    bytes: 307611584
+    state_key: model
+    archive_name: archive
+  cheofamo_ma3d_ckpt:
+    path: model/ma3d/checkpoints/cheofamo_MA3D.pth
+    sha256: 2290ba044c93832cc75bea1ace21044c17215699d960da3e52c26e3f270d1d59
+    bytes: 307607488
+    state_key: model
+    archive_name: archive
+  # Thống kê chuẩn hoá 3DMM (*_emoca_stats.npz): sinh bằng compute_stats trên tập train (model/ma3d/README.md:24;
+  # model/ma3d/Read_dataset/RAF_DB.py:102-160). Thiếu file thì MA3D phải trả `codes_missing`, không được điền 0.
+  # RAF-DB: đã có (2026-09-25). Nguồn: người train MA3D-Net gửi qua Drive, người dùng tải về. Đã kiểm bằng
+  # tests/check_emoca_stats.py → PASS (đủ 10 khoá {exp,detail,pose,shape,tex}_{mean,std}, chiều 50/128/6/100/50, không NaN).
+  # ĐÃ xác nhận (người dùng, 2026-09-25, thông tin từ nhóm train MA3D-Net): đây đúng là file đã dùng khi train
+  # raf_MA3D.pth. Ba bộ dữ liệu còn lại (caers/ferplus/cheofamo) chưa có stats.
+  raf_emoca_stats:
+    path: model/ma3d/checkpoints/rafdb_emoca_stats.npz
+    sha256: 7aa56e9fe090e33a200342d1a2d81e4d17a741539c847a0c0d94600b77592c29
+    bytes: 5188
+
+# ---------------------------------------------------------------------------
+# File bị cách ly — KHÔNG dùng. Bằng chứng: python tests/check_ma3d_checkpoints.py
+# ---------------------------------------------------------------------------
+quarantined:
+  - path: model/ma3d/checkpoints/CheoFaMo_POSTER.pth
+    sha256: a8162073aa172ad1d3f678f8e22033b9cfa3f0d399bb8254872bc5a1b64dc421
+    reason: >-
+      Không phải POSTER. archive_name "CheoFaMo_MA"; toàn bộ 1369 tensor giống từng byte với
+      cheofamo_MA3D.pth (chỉ khác vỏ zip). Cần người dùng lấy lại đúng file POSTER CheoFaMo.
+  - path: model/ma3d/checkpoints/ferplus_POSTER.pth
+    sha256: d6841587c233b42ac128137812bd31fba4b7d15ae5555c9ca034f7c08c18a50a
+    reason: >-
+      Nhiều khả năng không phải POSTER. archive_name "ferplus_MA"; mm_fusion.* ĐÃ được huấn luyện
+      (hàng nghìn trọng số vượt biên khởi tạo), trái với rafdb/caers POSTER (mm_fusion nguyên giá
+      trị khởi tạo). Trọng số khác ferplus_MA3D.pth ⇒ có thể là một lần chạy MA3D khác.
+
+# ---------------------------------------------------------------------------
+# Registry. arch:
+#   MA3D           — models/MA3D.py nguyên bản: forward(x, x_3d) có mm_fusion; cần mã 3DMM + stats.
+#   MA3D_no_fusion — POSTER theo ADR-011: cùng lớp MA3D, nạp cùng state_dict, forward BỎ QUA
+#                    mm_fusion (không cần mã 3DMM). Bằng chứng: mm_fusion.* trong checkpoint POSTER
+#                    nằm trọn trong biên khởi tạo (chưa từng nhận gradient).
+# labels: đúng thứ tự chỉ số đầu ra. null = chưa xác minh ⇒ bắt buộc enabled: false.
+# ---------------------------------------------------------------------------
+models:
+  - id: poster_rafdb
+    display_name: "POSTER (RAF-DB)"
+    arch: MA3D_no_fusion
+    dataset: RAF-DB
+    num_classes: 7
+    # Thứ tự RAF-DB: label = int(thư_mục) − 1 (model/ma3d/Read_dataset/RAF_DB.py:42), thư mục 1..7.
+    # Xác minh bằng 2 nguồn trong repo nhóm: scripts/tsne.py:19-27 (EMOTION_NAMES 0..6) và
+    # Read_dataset/DatasetCheo.py:9-12 (EMOTIONS); cả hai trùng quy ước công bố của RAF-DB
+    # (1 Surprise, 2 Fear, 3 Disgust, 4 Happiness, 5 Sadness, 6 Anger, 7 Neutral).
+    # Chưa đối chiếu được thư mục dữ liệu thật (Datasets/ không có trong bản clone).
+    labels: [surprise, fear, disgust, happiness, sadness, anger, neutral]
+    ckpt: raf_poster_ckpt
+    stats: null            # POSTER không dùng 3DMM
+    backbones: {ir50: ir50, mobilefacenet: mobilefacenet}
+    enabled: true
+    notes: >-
+      POSTER theo thiết lập huấn luyện của nhóm (ADR-011), không đồng nhất với bản công bố.
+      Log: model/ma3d/log/raf_POSTER.txt, best val acc 90.44%.
+
+  - id: ma3d_rafdb
+    display_name: "MA3D-Net (RAF-DB)"
+    arch: MA3D
+    dataset: RAF-DB
+    num_classes: 7
+    # Thứ tự nhãn: nguồn như poster_rafdb; ĐÃ xác nhận khớp với checkpoint (người dùng, 2026-09-25, thông tin từ nhóm train).
+    labels: [surprise, fear, disgust, happiness, sadness, anger, neutral]
+    ckpt: raf_ma3d_ckpt
+    stats: raf_emoca_stats # rafdb_emoca_stats.npz (artifact ở trên). Vẫn cần mã 3DMM THẬT từ EMOCA thật, xem web/engine.py `codes_real`
+    backbones: {ir50: ir50, mobilefacenet: mobilefacenet}
+    enabled: true
+    notes: >-
+      Log: model/ma3d/log/raf_MA3D.txt (resume path checkpoints/raf_MA.pth).
+      Tên raf_MA3D.pth (Drive) ↔ raf_MA.pth (log) là giả thuyết, chưa kiểm.
+
+  - id: poster_caers
+    display_name: "POSTER (CAER-S)"
+    arch: MA3D_no_fusion
+    dataset: CAER-S
+    num_classes: 7
+    labels: null           # sorted(tên thư mục) lúc chạy (Read_dataset/Caers.py:20-22) — cần thư mục thật
+    ckpt: caers_poster_ckpt
+    stats: null
+    backbones: {ir50: ir50, mobilefacenet: mobilefacenet}
+    enabled: false
+    notes: "Chờ xác minh nhãn."
+
+  - id: ma3d_caers
+    display_name: "MA3D-Net (CAER-S)"
+    arch: MA3D
+    dataset: CAER-S
+    num_classes: 7
+    labels: null
+    ckpt: caers_ma3d_ckpt
+    stats: null
+    backbones: {ir50: ir50, mobilefacenet: mobilefacenet}
+    enabled: false
+    notes: "Chờ xác minh nhãn và caers_emoca_stats.npz."
+
+  - id: ma3d_ferplus
+    display_name: "MA3D-Net (FERPlus)"
+    arch: MA3D
+    dataset: FERPlus
+    num_classes: 8
+    labels: null           # sorted(tên thư mục) (Read_dataset/FER_Plus.py:19-23) — cần thư mục thật
+    ckpt: ferplus_ma3d_ckpt
+    stats: null
+    backbones: {ir50: ir50, mobilefacenet: mobilefacenet}
+    enabled: false
+    notes: "Chờ xác minh nhãn và stats. Chưa có POSTER FERPlus hợp lệ (xem quarantined)."
+
+  - id: ma3d_cheofamo
+    display_name: "MA3D-Net (CheoFaMo)"
+    arch: MA3D
+    dataset: CheoFaMo
+    num_classes: 6
+    labels: null           # sorted(tập nhãn trong JSON) (Read_dataset/Cheo_FaMo.py:66-68)
+    ckpt: cheofamo_ma3d_ckpt
+    stats: null
+    backbones: {ir50: ir50, mobilefacenet: mobilefacenet}
+    enabled: false
+    notes: "Chờ xác minh nhãn và stats. Chưa có POSTER CheoFaMo hợp lệ (xem quarantined)."
+
+# Cặp so sánh mặc định trên giao diện (PROJECT_CONTEXT §1: POSTER vs MA3D-Net, RAF-DB).
+default_comparison: [poster_rafdb, ma3d_rafdb]

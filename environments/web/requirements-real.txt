@@ -1,0 +1,15 @@
+# web/ — chạy POSTER/MA3D-Net THẬT (web/engine.py mode="real", M2-05, ADR-016) + chạy test.
+# torch bản CPU: máy dự án có GPU nhưng suy luận ở đây chạy trên CPU (EMOCA mới là phần cần GPU, chạy trên Colab).
+# Cài torch CPU TRƯỚC (PyPI mặc định có thể kéo bản CUDA lớn):
+#   pip install torch==2.14.0 torchvision==0.29.0 --index-url https://download.pytorch.org/whl/cpu
+# rồi:  pip install -r environments/web/requirements-real.txt
+# (đã kiểm với torch 2.14.0+cpu, Python 3.13.7; torchvision chỉ để test so tiền xử lý với repo gốc)
+-r requirements.txt
+torch==2.14.0
+torchvision==0.29.0
+einops==0.8.2        # model/ma3d/models nạp einops
+matplotlib==3.11.2   # model/ma3d/models/MA3D.py import matplotlib.pyplot (engine đặt MPLBACKEND=Agg)
+numpy==2.5.3
+jsonschema==4.26.0   # chỉ để chạy test (tests/*)
+ultralytics==8.4.166  # M5-01 optional local YOLO26-face shadow detector; smoke-tested with the project checkpoint
+pytest==9.1.1         # M5-01 offline preprocessor/UI test runner

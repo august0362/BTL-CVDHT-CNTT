@@ -1,0 +1,23 @@
+# Build context chỉ cần backend/, frontend/, environments/. Trọng số mount lúc chạy, không đóng vào image.
+.git
+.claude
+.codex
+.pytest_cache
+**/__pycache__
+*.pyc
+another
+database
+documents
+pipeline_visualizer
+backend/model/emoca
+backend/model/ma3d/checkpoints
+backend/model/ma3d/.git-upstream
+backend/third_party
+**/*.pth
+**/*.pt
+**/*.tar
+**/*.ckpt
+**/*.pkl
+**/*.npz
+**/*.zip
+.env

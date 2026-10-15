@@ -1,0 +1,20 @@
+{
+  "model_name": "yolo26_face",
+  "architecture": "YOLO26s-Face",
+  "framework": "Ultralytics YOLO26",
+  "task": "face-detection",
+  "input_size": 640,
+  "num_classes": 1,
+  "class_names": ["face"],
+  "download_date": null,
+  "artifact_observed_date": "2026-09-30",
+  "file_size_bytes": 20289541,
+  "source_url": "https://github.com/marceloeatworld/yolo26-training/blob/main/checkpoints/yolo26_face.pt",
+  "source_revision": null,
+  "sha256": "9FB5C9E36D3257C2979842E7573082BC05E4E78309D30A7333971C47B4B725B4",
+  "license_status": "user-approved-for-coursework-use; upstream-license-not-independently-verified",
+  "artifact_status": "present; local-hash-recorded; loaded-and-smoke-tested; source-revision-unverified",
+  "inference_status": "pass: Ultralytics YOLO load and CPU inference through FaceDetectionPreprocessor on one local RAF-DB test image; one face detected; RGB annotation and non-empty crop returned in memory",
+  "ab_status": "real EMOCA/FER A/B on balanced 21-image RAF-DB subset: YOLO detected 16/21 at conf 0.5 and 19/21 at 0.01; one added low-confidence crop had 4.540px mean landmark error. Among 16 conf-0.5 matched pairs bbox IoU mean 0.9212, landmark mean error 0.878px; each FER model had one top-1 flip; crop remains shadow pending detector improvement/precision evaluation",
+  "notes": "A local model/yolo26_face/yolo26_face.pt file was observed on 2026-09-30. Size: 20,289,541 bytes. SHA-256: 9FB5C9E36D3257C2979842E7573082BC05E4E78309D30A7333971C47B4B725B4. Initial bytes have ZIP/PyTorch-archive form and are not a Git LFS pointer, but origin and upstream revision are unverified; actual download date is unknown, so the digest records this local file and is not matched to an upstream digest. User approved using the candidate for this coursework and stated the source is trusted; this records project authorization, not an independent license opinion. In project venv ma3d-web (Python 3.13.5), existing torch 2.14.0+cpu and torchvision 0.29.0+cpu were retained; ultralytics 8.4.166 was installed. CPU smoke inference through FaceDetectionPreprocessor on src/image/archive/DATASET/test/2/test_2303_aligned.jpg returned bbox [3,2,95,100], confidence 0.807876, 100x100 RGB annotation, 92x98 RGB crop, and about 5 seconds inference. Outputs were not saved. Balanced 21-image real EMOCA/FER A/B results are in docs/qa/M5_01_AB_2026-09-30.md. The checkpoint detected only 16/21 RAF-DB aligned images at conf 0.5, so crop remains opt-in/shadow pending detector improvement/evaluation. Ultralytics emitted a non-fatal permission error attempting to update settings under AppData. The default pipeline is unchanged."
+}

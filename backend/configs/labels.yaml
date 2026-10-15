@@ -1,0 +1,30 @@
+# configs/labels.yaml — Bảng nhãn chuẩn (tên nội bộ → hiển thị)
+# Chủ sở hữu: 02_CONFIG_METRICS. Hình dạng theo CONTRACTS_ADR.md Phần C.
+# Thứ tự nhãn của từng checkpoint KHÔNG nằm ở đây mà ở configs/models.yaml (models[].labels).
+# `color`: màu GỐC dạng #rrggbb (đề xuất của 04_FRONTEND, SESSION_LOG Session 07). web/theme.py tự
+#   chỉnh độ sáng (giữ sắc độ) cho đủ tương phản trên từng chủ đề sáng/tối. `neutral` = null: màu
+#   lấy theo sắc độ chủ đạo của chủ đề đang dùng.
+
+schema_version: 1
+
+labels:
+  surprise:  {display: {vi: "Ngạc nhiên", en: "Surprise"},  color: "#1cc8e3"}
+  fear:      {display: {vi: "Sợ hãi",     en: "Fear"},      color: "#791ce3"}
+  disgust:   {display: {vi: "Ghê tởm",    en: "Disgust"},   color: "#5ee31c"}
+  happiness: {display: {vi: "Vui vẻ",     en: "Happiness"}, color: "#e3b51c"}
+  sadness:   {display: {vi: "Buồn",       en: "Sadness"},   color: "#1c6ce3"}
+  anger:     {display: {vi: "Tức giận",   en: "Anger"},     color: "#e3231c"}
+  neutral:   {display: {vi: "Trung tính", en: "Neutral"},   color: null}
+  contempt:  {display: {vi: "Khinh thường", en: "Contempt"}, color: "#e31ca7"}   # chỉ FERPlus (8 lớp)
+
+# Ánh xạ tên nhãn thô của từng bộ dữ liệu → tên nội bộ. Chỉ ghi bộ đã xác minh.
+dataset_aliases:
+  RAF-DB:
+    # Theo scripts/tsne.py và Read_dataset/DatasetCheo.py của repo nhóm.
+    Surprise: surprise
+    Fear: fear
+    Disgust: disgust
+    Happiness: happiness
+    Sadness: sadness
+    Anger: anger
+    Neutral: neutral

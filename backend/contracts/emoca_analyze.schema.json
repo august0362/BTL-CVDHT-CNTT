@@ -1,0 +1,336 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "emoca_analyze.schema.json",
+  "title": "emoca_svc /v1/analyze response",
+  "description": "contract_version 0.3.0 (ADR-019; 0.2.0: ADR-013) — xem docs/context/CONTRACTS_ADR.md Phần B1",
+  "type": "object",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/success"
+    },
+    {
+      "$ref": "#/$defs/error_envelope"
+    }
+  ],
+  "$defs": {
+    "image_b64": {
+      "type": "object",
+      "required": [
+        "format",
+        "b64"
+      ],
+      "properties": {
+        "format": {
+          "type": "string",
+          "enum": [
+            "png",
+            "jpeg"
+          ]
+        },
+        "b64": {
+          "type": "string"
+        }
+      }
+    },
+    "point_list": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "number"
+        },
+        "minItems": 2,
+        "maxItems": 2
+      }
+    },
+    "face": {
+      "type": "object",
+      "required": [
+        "face_index",
+        "bbox_original_px",
+        "crop_transform",
+        "landmarks",
+        "codes",
+        "renders",
+        "warnings"
+      ],
+      "properties": {
+        "face_index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "bbox_original_px": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 4,
+          "maxItems": 4
+        },
+        "crop_transform": {
+          "type": "object",
+          "required": [
+            "from",
+            "to",
+            "matrix_3x3"
+          ],
+          "properties": {
+            "from": {
+              "const": "original_px"
+            },
+            "to": {
+              "const": "crop224"
+            },
+            "matrix_3x3": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "minItems": 3,
+                "maxItems": 3
+              },
+              "minItems": 3,
+              "maxItems": 3
+            }
+          }
+        },
+        "crop_image": {
+          "$ref": "#/$defs/image_b64"
+        },
+        "landmarks": {
+          "type": "object",
+          "required": [
+            "n_points",
+            "crop224",
+            "original_px"
+          ],
+          "properties": {
+            "n_points": {
+              "const": 68
+            },
+            "crop224": {
+              "$ref": "#/$defs/point_list",
+              "minItems": 68,
+              "maxItems": 68
+            },
+            "original_px": {
+              "$ref": "#/$defs/point_list",
+              "minItems": 68,
+              "maxItems": 68
+            }
+          }
+        },
+        "codes": {
+          "type": "object",
+          "required": [
+            "shape",
+            "exp",
+            "tex",
+            "pose",
+            "detail"
+          ],
+          "properties": {
+            "shape": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 100,
+              "maxItems": 100
+            },
+            "exp": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 50,
+              "maxItems": 50
+            },
+            "tex": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 50,
+              "maxItems": 50
+            },
+            "pose": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 6,
+              "maxItems": 6
+            },
+            "detail": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 128,
+              "maxItems": 128
+            }
+          }
+        },
+        "renders": {
+          "type": "object",
+          "required": [
+            "geometry_coarse",
+            "geometry_detail",
+            "output_coarse",
+            "output_detail"
+          ],
+          "properties": {
+            "geometry_coarse": {
+              "$ref": "#/$defs/image_b64"
+            },
+            "geometry_detail": {
+              "$ref": "#/$defs/image_b64"
+            },
+            "output_coarse": {
+              "$ref": "#/$defs/image_b64"
+            },
+            "output_detail": {
+              "$ref": "#/$defs/image_b64"
+            }
+          }
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "success": {
+      "required": [
+        "contract_version",
+        "service",
+        "model",
+        "image",
+        "faces",
+        "timing_ms"
+      ],
+      "properties": {
+        "contract_version": {
+          "const": "0.3.0"
+        },
+        "service": {
+          "const": "emoca_svc"
+        },
+        "model": {
+          "type": "object",
+          "required": [
+            "name",
+            "mode",
+            "upstream_commit"
+          ],
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "mode": {
+              "type": "string",
+              "enum": [
+                "coarse",
+                "detail"
+              ]
+            },
+            "upstream_commit": {
+              "type": "string"
+            }
+          }
+        },
+        "image": {
+          "type": "object",
+          "required": [
+            "width",
+            "height"
+          ],
+          "properties": {
+            "width": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "height": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        },
+        "faces": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/face"
+          }
+        },
+        "timing_ms": {
+          "type": "object",
+          "required": [
+            "detect",
+            "encode",
+            "decode",
+            "total"
+          ],
+          "properties": {
+            "detect": {
+              "type": "number",
+              "minimum": 0
+            },
+            "encode": {
+              "type": "number",
+              "minimum": 0
+            },
+            "decode": {
+              "type": "number",
+              "minimum": 0
+            },
+            "total": {
+              "type": "number",
+              "minimum": 0
+            }
+          }
+        }
+      }
+    },
+    "error_envelope": {
+      "required": [
+        "error"
+      ],
+      "properties": {
+        "error": {
+          "type": "object",
+          "required": [
+            "code",
+            "message",
+            "retryable"
+          ],
+          "properties": {
+            "code": {
+              "type": "string",
+              "enum": [
+                "image_invalid",
+                "image_too_large",
+                "no_face",
+                "service_unavailable",
+                "timeout",
+                "model_unavailable",
+                "codes_missing",
+                "contract_mismatch"
+              ]
+            },
+            "message": {
+              "type": "string"
+            },
+            "retryable": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    }
+  }
+}

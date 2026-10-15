@@ -1,0 +1,64 @@
+# Claude project context and local workflow
+CLAUDE.md
+.claude/
+PROMPT_TIEP_TUC.md
+documents/docs/context/
+
+# Frozen reference repository and upstream model sources
+another/template_claude/
+another/template_claude_git_stub/
+backend/model/emoca/
+# MA3D-Net: mã của nhóm được commit (2026-10-15); checkpoint tải từ GitHub Release
+backend/model/ma3d/checkpoints/*
+!backend/model/ma3d/checkpoints/save_ckp_here
+backend/model/ma3d/.git-upstream/
+backend/third_party/3DDFA_V2/
+
+# Licensed or large model assets
+*.pth
+*.tar
+*.ckpt
+*.npz
+*.pkl
+*.pt
+*.onnx
+*.safetensors
+
+# Python environments and caches
+venv/
+venvs/
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Generated bundles and private benchmark datasets
+another/notebooks/*.zip
+another/kaggle/dataset.zip
+another/kaggle/dataset/bundle/
+another/ggcolab/bundle/
+another/ggcolab/results/
+another/ggcolab/runtime/
+database/image/
+database/results/*.zip
+
+# Screenshots containing faces
+documents/docs/qa/E2E_REAL_EMOCA_2026-09-25/
+documents/docs/qa/UI_LOADING_NARROW_2026-09-25/375_settings_closed_result_full.png
+documents/docs/qa/UI_LOADING_NARROW_2026-09-25/375_settings_open_result_full.png
+documents/docs/qa/UI_LOADING_NARROW_2026-09-25/mock_result_1440.png
+documents/docs/qa/UI_LOADING_NARROW_2026-09-25/real_result_1440.png
+documents/docs/qa/UI_LOADING_NARROW_2026-09-25/real_spinner_1440.png
+
+# Local credentials and logs
+.streamlit/secrets.toml
+*.log
+
+# Paper and presentation files stay local
+*.pdf
+*.pptx
+
+# Docker / local tooling
+.env
+.codex/
+pipeline_visualizer/samples/*.jpg

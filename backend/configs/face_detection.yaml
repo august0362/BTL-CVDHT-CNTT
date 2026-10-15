@@ -1,0 +1,10 @@
+# Optional single-face detector settings (M5-01, ADR-021).
+# The stage is only run when explicitly requested in the UI. Crops are used only
+# by the isolated MA3D preprocessing comparison; default EMOCA/POSTER/MA3D inputs
+# remain unchanged.
+available: true
+mode: shadow
+model_path: model/yolo26_face/yolo26_face.pt
+conf_threshold: 0.5
+crop_scale: 1.3
+imgsz: 640

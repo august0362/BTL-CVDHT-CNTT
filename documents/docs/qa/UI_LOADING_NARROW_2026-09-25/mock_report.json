@@ -1,0 +1,58 @@
+{
+  "url": "http://127.0.0.1:8599",
+  "image": "model\\emoca\\gdl_apps\\EMOCA\\emoca.png",
+  "tag": "mock",
+  "spinner_wait_error": "TimeoutError: Locator.wait_for: Timeout 15000ms exceeded.\nCall log:\n  - waiting for get_by_text(\"Đang phân tích\").first to be visible\n",
+  "spinner_dom": {
+    "seen_ms_after_upload": [],
+    "gone_ms_after_upload": []
+  },
+  "spinner_screenshot": null,
+  "page_errors_1440": [],
+  "narrow_375": {
+    "closed": {
+      "settings_open_actual": false,
+      "empty": {
+        "viewport": 375,
+        "doc_scroll_width": 375,
+        "h_overflow": false,
+        "offscreen": [],
+        "offscreen_n": 0,
+        "clipped": [],
+        "clipped_n": 0
+      },
+      "result": {
+        "viewport": 375,
+        "doc_scroll_width": 375,
+        "h_overflow": false,
+        "offscreen": [],
+        "offscreen_n": 0,
+        "clipped": [],
+        "clipped_n": 0
+      },
+      "page_errors": []
+    },
+    "open": {
+      "settings_open_actual": true,
+      "empty": {
+        "viewport": 375,
+        "doc_scroll_width": 375,
+        "h_overflow": false,
+        "offscreen": [],
+        "offscreen_n": 0,
+        "clipped": [],
+        "clipped_n": 0
+      },
+      "result": {
+        "viewport": 375,
+        "doc_scroll_width": 375,
+        "h_overflow": false,
+        "offscreen": [],
+        "offscreen_n": 0,
+        "clipped": [],
+        "clipped_n": 0
+      },
+      "page_errors": []
+    }
+  }
+}

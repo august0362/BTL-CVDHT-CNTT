@@ -1,0 +1,19 @@
+Patch:    0102-facevideodm-sequence-id-clamp   [TUY CHON - workaround, chi cho demo video]
+Upstream: radekd91/emoca @ e0be0db (release/EMOCA_v2)
+Files:    gdl/datasets/FaceVideoDataModule.py
+Ly do:    Workaround chep tu notebook: ke `sequence_id` vao [.., len(video_list)-1] trong
+          TestFaceVideoDM._get_path_to_sequence_files. Nguyen nhan goc CHUA xac dinh; voi video_list rong van IndexError.
+          Che trieu chung (CLAUDE.md §6) nen chi bat khi demo video that su bao IndexError.
+
+diff --git a/gdl/datasets/FaceVideoDataModule.py b/gdl/datasets/FaceVideoDataModule.py
+index dc4fc2f..b713014 100644
+--- a/gdl/datasets/FaceVideoDataModule.py
++++ b/gdl/datasets/FaceVideoDataModule.py
+@@ -3250,6 +3250,7 @@ class TestFaceVideoDM(FaceVideoDataModule):
+     def _get_path_to_sequence_files(self, sequence_id, file_type, method="", suffix=""): 
+         assert file_type in ['videos', 'detections', "landmarks", "segmentations", 
+             "emotions", "reconstructions", "results", "audio"], f"'{file_type}' is not a valid file type"
++        sequence_id = min(sequence_id, len(self.video_list) - 1)
+         video_file = self.video_list[sequence_id]
+         if len(method) > 0:
+             file_type += "/" + method 

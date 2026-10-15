@@ -1,0 +1,1738 @@
+{
+  "n_rows": 18408,
+  "angles": [
+    0,
+    15,
+    30,
+    45,
+    60,
+    90
+  ],
+  "estimator": {
+    "0": {
+      "median_roll": -0.18,
+      "median_abs_error_vs_true": 0.0,
+      "share_abs_error_gt_15": 0.0
+    },
+    "15": {
+      "median_roll": 14.47,
+      "median_abs_error_vs_true": 1.1000000000000005,
+      "share_abs_error_gt_15": 0.0048891786179921775
+    },
+    "30": {
+      "median_roll": 27.67,
+      "median_abs_error_vs_true": 2.3900000000000006,
+      "share_abs_error_gt_15": 0.019230769230769232
+    },
+    "45": {
+      "median_roll": 43.144999999999996,
+      "median_abs_error_vs_true": 2.4300000000000015,
+      "share_abs_error_gt_15": 0.05573663624511082
+    },
+    "60": {
+      "median_roll": 59.82,
+      "median_abs_error_vs_true": 2.5600000000000014,
+      "share_abs_error_gt_15": 0.08148631029986962
+    },
+    "90": {
+      "median_roll": 92.55,
+      "median_abs_error_vs_true": 3.909999999999999,
+      "share_abs_error_gt_15": 0.07561929595827901
+    }
+  },
+  "table": [
+    {
+      "model": "poster_rafdb",
+      "policy": "raw",
+      "threshold": null,
+      "angle": 0,
+      "n": 3068,
+      "coverage": 0.992503259452412,
+      "accuracy_all": 0.8797262059973925,
+      "macro_f1": 0.8301532140714059
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "raw",
+      "threshold": null,
+      "angle": 15,
+      "n": 3068,
+      "coverage": 0.9762059973924381,
+      "accuracy_all": 0.8673402868318123,
+      "macro_f1": 0.8206297121044887
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "raw",
+      "threshold": null,
+      "angle": 30,
+      "n": 3068,
+      "coverage": 0.9576271186440678,
+      "accuracy_all": 0.8468057366362451,
+      "macro_f1": 0.8066692572651266
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "raw",
+      "threshold": null,
+      "angle": 45,
+      "n": 3068,
+      "coverage": 0.9465449804432855,
+      "accuracy_all": 0.7917209908735332,
+      "macro_f1": 0.7395504489404646
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "raw",
+      "threshold": null,
+      "angle": 60,
+      "n": 3068,
+      "coverage": 0.9061277705345502,
+      "accuracy_all": 0.5824641460234681,
+      "macro_f1": 0.4698599443795505
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "raw",
+      "threshold": null,
+      "angle": 90,
+      "n": 3068,
+      "coverage": 0.8295306388526728,
+      "accuracy_all": 0.24771838331160365,
+      "macro_f1": 0.11243589762021781
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "raw",
+      "threshold": null,
+      "angle": "mean",
+      "n": null,
+      "coverage": 0.9347566275532376,
+      "accuracy_all": 0.7026292916123426,
+      "macro_f1": 0.6298830790635424
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "always",
+      "threshold": 0.0,
+      "angle": 0,
+      "n": 3068,
+      "coverage": 0.9879400260756193,
+      "accuracy_all": 0.8741851368970013,
+      "macro_f1": 0.8276219902904665
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "always",
+      "threshold": 0.0,
+      "angle": 15,
+      "n": 3068,
+      "coverage": 0.9814211212516297,
+      "accuracy_all": 0.8679921773142112,
+      "macro_f1": 0.8207313793364382
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "always",
+      "threshold": 0.0,
+      "angle": 30,
+      "n": 3068,
+      "coverage": 0.9784876140808344,
+      "accuracy_all": 0.8663624511082139,
+      "macro_f1": 0.8173699391592528
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "always",
+      "threshold": 0.0,
+      "angle": 45,
+      "n": 3068,
+      "coverage": 0.9735984354628422,
+      "accuracy_all": 0.8627770534550195,
+      "macro_f1": 0.8206352053219164
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "always",
+      "threshold": 0.0,
+      "angle": 60,
+      "n": 3068,
+      "coverage": 0.9647979139504563,
+      "accuracy_all": 0.8572359843546284,
+      "macro_f1": 0.8124432927408981
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "always",
+      "threshold": 0.0,
+      "angle": 90,
+      "n": 3068,
+      "coverage": 0.9631681877444589,
+      "accuracy_all": 0.8546284224250326,
+      "macro_f1": 0.8171591013726015
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "always",
+      "threshold": 0.0,
+      "angle": "mean",
+      "n": null,
+      "coverage": 0.9749022164276401,
+      "accuracy_all": 0.8638635375923512,
+      "macro_f1": 0.819326818036929
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=5",
+      "threshold": 5.0,
+      "angle": 0,
+      "n": 3068,
+      "coverage": 0.9879400260756193,
+      "accuracy_all": 0.8741851368970013,
+      "macro_f1": 0.8276219902904665
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=5",
+      "threshold": 5.0,
+      "angle": 15,
+      "n": 3068,
+      "coverage": 0.9814211212516297,
+      "accuracy_all": 0.8679921773142112,
+      "macro_f1": 0.8207313793364382
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=5",
+      "threshold": 5.0,
+      "angle": 30,
+      "n": 3068,
+      "coverage": 0.9784876140808344,
+      "accuracy_all": 0.8663624511082139,
+      "macro_f1": 0.8173699391592528
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=5",
+      "threshold": 5.0,
+      "angle": 45,
+      "n": 3068,
+      "coverage": 0.9735984354628422,
+      "accuracy_all": 0.8627770534550195,
+      "macro_f1": 0.8206352053219164
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=5",
+      "threshold": 5.0,
+      "angle": 60,
+      "n": 3068,
+      "coverage": 0.9647979139504563,
+      "accuracy_all": 0.8572359843546284,
+      "macro_f1": 0.8124432927408981
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=5",
+      "threshold": 5.0,
+      "angle": 90,
+      "n": 3068,
+      "coverage": 0.9631681877444589,
+      "accuracy_all": 0.8546284224250326,
+      "macro_f1": 0.8171591013726015
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=5",
+      "threshold": 5.0,
+      "angle": "mean",
+      "n": null,
+      "coverage": 0.9749022164276401,
+      "accuracy_all": 0.8638635375923512,
+      "macro_f1": 0.819326818036929
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=10",
+      "threshold": 10.0,
+      "angle": 0,
+      "n": 3068,
+      "coverage": 0.9902216427640157,
+      "accuracy_all": 0.8764667535853976,
+      "macro_f1": 0.8282736970351959
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=10",
+      "threshold": 10.0,
+      "angle": 15,
+      "n": 3068,
+      "coverage": 0.9788135593220338,
+      "accuracy_all": 0.8653846153846154,
+      "macro_f1": 0.8184294942856635
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=10",
+      "threshold": 10.0,
+      "angle": 30,
+      "n": 3068,
+      "coverage": 0.977509778357236,
+      "accuracy_all": 0.8653846153846154,
+      "macro_f1": 0.8171749781665801
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=10",
+      "threshold": 10.0,
+      "angle": 45,
+      "n": 3068,
+      "coverage": 0.9732724902216427,
+      "accuracy_all": 0.8627770534550195,
+      "macro_f1": 0.8207355397813929
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=10",
+      "threshold": 10.0,
+      "angle": 60,
+      "n": 3068,
+      "coverage": 0.9647979139504563,
+      "accuracy_all": 0.8578878748370273,
+      "macro_f1": 0.8125463151348156
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=10",
+      "threshold": 10.0,
+      "angle": 90,
+      "n": 3068,
+      "coverage": 0.9634941329856584,
+      "accuracy_all": 0.8552803129074316,
+      "macro_f1": 0.8173072415483255
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=10",
+      "threshold": 10.0,
+      "angle": "mean",
+      "n": null,
+      "coverage": 0.9746849196001738,
+      "accuracy_all": 0.8638635375923512,
+      "macro_f1": 0.8190778776586622
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=15",
+      "threshold": 15.0,
+      "angle": 0,
+      "n": 3068,
+      "coverage": 0.991851368970013,
+      "accuracy_all": 0.8790743155149935,
+      "macro_f1": 0.8297849146335757
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=15",
+      "threshold": 15.0,
+      "angle": 15,
+      "n": 3068,
+      "coverage": 0.9758800521512386,
+      "accuracy_all": 0.8647327249022164,
+      "macro_f1": 0.8210298075719098
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=15",
+      "threshold": 15.0,
+      "angle": 30,
+      "n": 3068,
+      "coverage": 0.9771838331160365,
+      "accuracy_all": 0.8653846153846154,
+      "macro_f1": 0.8176945241759569
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=15",
+      "threshold": 15.0,
+      "angle": 45,
+      "n": 3068,
+      "coverage": 0.9729465449804433,
+      "accuracy_all": 0.8617992177314211,
+      "macro_f1": 0.8188349940392892
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=15",
+      "threshold": 15.0,
+      "angle": 60,
+      "n": 3068,
+      "coverage": 0.9651238591916558,
+      "accuracy_all": 0.8572359843546284,
+      "macro_f1": 0.8115455101112943
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=15",
+      "threshold": 15.0,
+      "angle": 90,
+      "n": 3068,
+      "coverage": 0.9634941329856584,
+      "accuracy_all": 0.8549543676662321,
+      "macro_f1": 0.8171513644543188
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=15",
+      "threshold": 15.0,
+      "angle": "mean",
+      "n": null,
+      "coverage": 0.974413298565841,
+      "accuracy_all": 0.8638635375923512,
+      "macro_f1": 0.8193401858310575
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=20",
+      "threshold": 20.0,
+      "angle": 0,
+      "n": 3068,
+      "coverage": 0.9921773142112125,
+      "accuracy_all": 0.8794002607561929,
+      "macro_f1": 0.8300335208272057
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=20",
+      "threshold": 20.0,
+      "angle": 15,
+      "n": 3068,
+      "coverage": 0.9762059973924381,
+      "accuracy_all": 0.8666883963494133,
+      "macro_f1": 0.819862473596342
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=20",
+      "threshold": 20.0,
+      "angle": 30,
+      "n": 3068,
+      "coverage": 0.9745762711864406,
+      "accuracy_all": 0.8614732724902217,
+      "macro_f1": 0.8140048114636479
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=20",
+      "threshold": 20.0,
+      "angle": 45,
+      "n": 3068,
+      "coverage": 0.9726205997392438,
+      "accuracy_all": 0.8611473272490222,
+      "macro_f1": 0.8185467613442962
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=20",
+      "threshold": 20.0,
+      "angle": 60,
+      "n": 3068,
+      "coverage": 0.9654498044328553,
+      "accuracy_all": 0.85625814863103,
+      "macro_f1": 0.8102420816263004
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=20",
+      "threshold": 20.0,
+      "angle": 90,
+      "n": 3068,
+      "coverage": 0.9634941329856584,
+      "accuracy_all": 0.8552803129074316,
+      "macro_f1": 0.8173072415483255
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=20",
+      "threshold": 20.0,
+      "angle": "mean",
+      "n": null,
+      "coverage": 0.9740873533246415,
+      "accuracy_all": 0.863374619730552,
+      "macro_f1": 0.8183328150676862
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=25",
+      "threshold": 25.0,
+      "angle": 0,
+      "n": 3068,
+      "coverage": 0.9921773142112125,
+      "accuracy_all": 0.8794002607561929,
+      "macro_f1": 0.8300335208272057
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=25",
+      "threshold": 25.0,
+      "angle": 15,
+      "n": 3068,
+      "coverage": 0.9758800521512386,
+      "accuracy_all": 0.8673402868318123,
+      "macro_f1": 0.8207203895873515
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=25",
+      "threshold": 25.0,
+      "angle": 30,
+      "n": 3068,
+      "coverage": 0.9703389830508474,
+      "accuracy_all": 0.8582138200782269,
+      "macro_f1": 0.8137616511858624
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=25",
+      "threshold": 25.0,
+      "angle": 45,
+      "n": 3068,
+      "coverage": 0.9716427640156454,
+      "accuracy_all": 0.8598435462842242,
+      "macro_f1": 0.8180461729003936
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=25",
+      "threshold": 25.0,
+      "angle": 60,
+      "n": 3068,
+      "coverage": 0.9651238591916558,
+      "accuracy_all": 0.8533246414602347,
+      "macro_f1": 0.8039248915519186
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=25",
+      "threshold": 25.0,
+      "angle": 90,
+      "n": 3068,
+      "coverage": 0.9628422425032594,
+      "accuracy_all": 0.855606258148631,
+      "macro_f1": 0.8176864445246672
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=25",
+      "threshold": 25.0,
+      "angle": "mean",
+      "n": null,
+      "coverage": 0.9730008691873099,
+      "accuracy_all": 0.8622881355932203,
+      "macro_f1": 0.8173621784295665
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=30",
+      "threshold": 30.0,
+      "angle": 0,
+      "n": 3068,
+      "coverage": 0.992503259452412,
+      "accuracy_all": 0.8797262059973925,
+      "macro_f1": 0.8301532140714059
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=30",
+      "threshold": 30.0,
+      "angle": 15,
+      "n": 3068,
+      "coverage": 0.9762059973924381,
+      "accuracy_all": 0.8673402868318123,
+      "macro_f1": 0.8206297121044887
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=30",
+      "threshold": 30.0,
+      "angle": 30,
+      "n": 3068,
+      "coverage": 0.9621903520208605,
+      "accuracy_all": 0.8516949152542372,
+      "macro_f1": 0.8091906988514731
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=30",
+      "threshold": 30.0,
+      "angle": 45,
+      "n": 3068,
+      "coverage": 0.9709908735332464,
+      "accuracy_all": 0.85625814863103,
+      "macro_f1": 0.8119168207505091
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=30",
+      "threshold": 30.0,
+      "angle": 60,
+      "n": 3068,
+      "coverage": 0.9647979139504563,
+      "accuracy_all": 0.8520208604954368,
+      "macro_f1": 0.8014330802216404
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=30",
+      "threshold": 30.0,
+      "angle": 90,
+      "n": 3068,
+      "coverage": 0.9631681877444589,
+      "accuracy_all": 0.8559322033898306,
+      "macro_f1": 0.817788638675402
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=30",
+      "threshold": 30.0,
+      "angle": "mean",
+      "n": null,
+      "coverage": 0.9716427640156454,
+      "accuracy_all": 0.8604954367666232,
+      "macro_f1": 0.8151853607791532
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=35",
+      "threshold": 35.0,
+      "angle": 0,
+      "n": 3068,
+      "coverage": 0.992503259452412,
+      "accuracy_all": 0.8797262059973925,
+      "macro_f1": 0.8301532140714059
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=35",
+      "threshold": 35.0,
+      "angle": 15,
+      "n": 3068,
+      "coverage": 0.9762059973924381,
+      "accuracy_all": 0.8673402868318123,
+      "macro_f1": 0.8206297121044887
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=35",
+      "threshold": 35.0,
+      "angle": 30,
+      "n": 3068,
+      "coverage": 0.9589308996088657,
+      "accuracy_all": 0.8477835723598436,
+      "macro_f1": 0.8072448937708397
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=35",
+      "threshold": 35.0,
+      "angle": 45,
+      "n": 3068,
+      "coverage": 0.9674054758800521,
+      "accuracy_all": 0.8503911342894394,
+      "macro_f1": 0.8063658662458398
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=35",
+      "threshold": 35.0,
+      "angle": 60,
+      "n": 3068,
+      "coverage": 0.9638200782268579,
+      "accuracy_all": 0.8477835723598436,
+      "macro_f1": 0.7972387077905242
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=35",
+      "threshold": 35.0,
+      "angle": 90,
+      "n": 3068,
+      "coverage": 0.9631681877444589,
+      "accuracy_all": 0.855606258148631,
+      "macro_f1": 0.8175949267266776
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=35",
+      "threshold": 35.0,
+      "angle": "mean",
+      "n": null,
+      "coverage": 0.9703389830508474,
+      "accuracy_all": 0.8581051716644937,
+      "macro_f1": 0.8132045534516292
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=40",
+      "threshold": 40.0,
+      "angle": 0,
+      "n": 3068,
+      "coverage": 0.992503259452412,
+      "accuracy_all": 0.8797262059973925,
+      "macro_f1": 0.8301532140714059
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=40",
+      "threshold": 40.0,
+      "angle": 15,
+      "n": 3068,
+      "coverage": 0.9762059973924381,
+      "accuracy_all": 0.8673402868318123,
+      "macro_f1": 0.8206297121044887
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=40",
+      "threshold": 40.0,
+      "angle": 30,
+      "n": 3068,
+      "coverage": 0.9579530638852672,
+      "accuracy_all": 0.8471316818774446,
+      "macro_f1": 0.8069483339294882
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=40",
+      "threshold": 40.0,
+      "angle": 45,
+      "n": 3068,
+      "coverage": 0.961864406779661,
+      "accuracy_all": 0.8419165580182529,
+      "macro_f1": 0.7982797730881902
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=40",
+      "threshold": 40.0,
+      "angle": 60,
+      "n": 3068,
+      "coverage": 0.9599087353324641,
+      "accuracy_all": 0.8393089960886571,
+      "macro_f1": 0.7891444472933011
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=40",
+      "threshold": 40.0,
+      "angle": 90,
+      "n": 3068,
+      "coverage": 0.9628422425032594,
+      "accuracy_all": 0.855606258148631,
+      "macro_f1": 0.8176517868549226
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=40",
+      "threshold": 40.0,
+      "angle": "mean",
+      "n": null,
+      "coverage": 0.9685462842242503,
+      "accuracy_all": 0.8551716644936983,
+      "macro_f1": 0.8104678778902995
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=50",
+      "threshold": 50.0,
+      "angle": 0,
+      "n": 3068,
+      "coverage": 0.992503259452412,
+      "accuracy_all": 0.8797262059973925,
+      "macro_f1": 0.8301532140714059
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=50",
+      "threshold": 50.0,
+      "angle": 15,
+      "n": 3068,
+      "coverage": 0.9762059973924381,
+      "accuracy_all": 0.8673402868318123,
+      "macro_f1": 0.8206297121044887
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=50",
+      "threshold": 50.0,
+      "angle": 30,
+      "n": 3068,
+      "coverage": 0.9579530638852672,
+      "accuracy_all": 0.8468057366362451,
+      "macro_f1": 0.8066127019266002
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=50",
+      "threshold": 50.0,
+      "angle": 45,
+      "n": 3068,
+      "coverage": 0.9488265971316818,
+      "accuracy_all": 0.7936766623207301,
+      "macro_f1": 0.740176954647695
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=50",
+      "threshold": 50.0,
+      "angle": 60,
+      "n": 3068,
+      "coverage": 0.953715775749674,
+      "accuracy_all": 0.8191003911342895,
+      "macro_f1": 0.7604071145486009
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=50",
+      "threshold": 50.0,
+      "angle": 90,
+      "n": 3068,
+      "coverage": 0.9634941329856584,
+      "accuracy_all": 0.8546284224250326,
+      "macro_f1": 0.8169856164784942
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=50",
+      "threshold": 50.0,
+      "angle": "mean",
+      "n": null,
+      "coverage": 0.9654498044328553,
+      "accuracy_all": 0.8435462842242503,
+      "macro_f1": 0.7958275522962142
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=60",
+      "threshold": 60.0,
+      "angle": 0,
+      "n": 3068,
+      "coverage": 0.992503259452412,
+      "accuracy_all": 0.8797262059973925,
+      "macro_f1": 0.8301532140714059
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=60",
+      "threshold": 60.0,
+      "angle": 15,
+      "n": 3068,
+      "coverage": 0.9762059973924381,
+      "accuracy_all": 0.8673402868318123,
+      "macro_f1": 0.8206297121044887
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=60",
+      "threshold": 60.0,
+      "angle": 30,
+      "n": 3068,
+      "coverage": 0.9579530638852672,
+      "accuracy_all": 0.8468057366362451,
+      "macro_f1": 0.8066127019266002
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=60",
+      "threshold": 60.0,
+      "angle": 45,
+      "n": 3068,
+      "coverage": 0.9465449804432855,
+      "accuracy_all": 0.7923728813559322,
+      "macro_f1": 0.7400494967338525
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=60",
+      "threshold": 60.0,
+      "angle": 60,
+      "n": 3068,
+      "coverage": 0.93122555410691,
+      "accuracy_all": 0.7131681877444589,
+      "macro_f1": 0.6181938000266619
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=60",
+      "threshold": 60.0,
+      "angle": 90,
+      "n": 3068,
+      "coverage": 0.96251629726206,
+      "accuracy_all": 0.8529986962190352,
+      "macro_f1": 0.8139923042144129
+    },
+    {
+      "model": "poster_rafdb",
+      "policy": "T=60",
+      "threshold": 60.0,
+      "angle": "mean",
+      "n": null,
+      "coverage": 0.9611581920903954,
+      "accuracy_all": 0.8254019991308127,
+      "macro_f1": 0.771605204846237
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "raw",
+      "threshold": null,
+      "angle": 0,
+      "n": 3068,
+      "coverage": 0.992503259452412,
+      "accuracy_all": 0.885593220338983,
+      "macro_f1": 0.8158706353449636
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "raw",
+      "threshold": null,
+      "angle": 15,
+      "n": 3068,
+      "coverage": 0.9762059973924381,
+      "accuracy_all": 0.8732073011734028,
+      "macro_f1": 0.8112149846533555
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "raw",
+      "threshold": null,
+      "angle": 30,
+      "n": 3068,
+      "coverage": 0.9576271186440678,
+      "accuracy_all": 0.8520208604954368,
+      "macro_f1": 0.7954936107874618
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "raw",
+      "threshold": null,
+      "angle": 45,
+      "n": 3068,
+      "coverage": 0.9465449804432855,
+      "accuracy_all": 0.8057366362451108,
+      "macro_f1": 0.7469959104735707
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "raw",
+      "threshold": null,
+      "angle": 60,
+      "n": 3068,
+      "coverage": 0.9061277705345502,
+      "accuracy_all": 0.6121251629726207,
+      "macro_f1": 0.5041354236775439
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "raw",
+      "threshold": null,
+      "angle": 90,
+      "n": 3068,
+      "coverage": 0.8295306388526728,
+      "accuracy_all": 0.18057366362451108,
+      "macro_f1": 0.1312348283095789
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "raw",
+      "threshold": null,
+      "angle": "mean",
+      "n": null,
+      "coverage": 0.9347566275532376,
+      "accuracy_all": 0.7015428074750109,
+      "macro_f1": 0.634157565541079
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "always",
+      "threshold": 0.0,
+      "angle": 0,
+      "n": 3068,
+      "coverage": 0.9879400260756193,
+      "accuracy_all": 0.8790743155149935,
+      "macro_f1": 0.812232009743982
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "always",
+      "threshold": 0.0,
+      "angle": 15,
+      "n": 3068,
+      "coverage": 0.9814211212516297,
+      "accuracy_all": 0.8751629726205997,
+      "macro_f1": 0.8120025833446319
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "always",
+      "threshold": 0.0,
+      "angle": 30,
+      "n": 3068,
+      "coverage": 0.9784876140808344,
+      "accuracy_all": 0.8761408083441982,
+      "macro_f1": 0.8149645942039795
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "always",
+      "threshold": 0.0,
+      "angle": 45,
+      "n": 3068,
+      "coverage": 0.9735984354628422,
+      "accuracy_all": 0.8666883963494133,
+      "macro_f1": 0.8096170446102888
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "always",
+      "threshold": 0.0,
+      "angle": 60,
+      "n": 3068,
+      "coverage": 0.9647979139504563,
+      "accuracy_all": 0.8608213820078227,
+      "macro_f1": 0.8009429226143067
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "always",
+      "threshold": 0.0,
+      "angle": 90,
+      "n": 3068,
+      "coverage": 0.9631681877444589,
+      "accuracy_all": 0.8559322033898306,
+      "macro_f1": 0.8002447192211494
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "always",
+      "threshold": 0.0,
+      "angle": "mean",
+      "n": null,
+      "coverage": 0.9749022164276401,
+      "accuracy_all": 0.8689700130378096,
+      "macro_f1": 0.8083339789563898
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=5",
+      "threshold": 5.0,
+      "angle": 0,
+      "n": 3068,
+      "coverage": 0.9879400260756193,
+      "accuracy_all": 0.8790743155149935,
+      "macro_f1": 0.812232009743982
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=5",
+      "threshold": 5.0,
+      "angle": 15,
+      "n": 3068,
+      "coverage": 0.9814211212516297,
+      "accuracy_all": 0.8751629726205997,
+      "macro_f1": 0.8120025833446319
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=5",
+      "threshold": 5.0,
+      "angle": 30,
+      "n": 3068,
+      "coverage": 0.9784876140808344,
+      "accuracy_all": 0.8761408083441982,
+      "macro_f1": 0.8149645942039795
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=5",
+      "threshold": 5.0,
+      "angle": 45,
+      "n": 3068,
+      "coverage": 0.9735984354628422,
+      "accuracy_all": 0.8666883963494133,
+      "macro_f1": 0.8096170446102888
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=5",
+      "threshold": 5.0,
+      "angle": 60,
+      "n": 3068,
+      "coverage": 0.9647979139504563,
+      "accuracy_all": 0.8608213820078227,
+      "macro_f1": 0.8009429226143067
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=5",
+      "threshold": 5.0,
+      "angle": 90,
+      "n": 3068,
+      "coverage": 0.9631681877444589,
+      "accuracy_all": 0.8559322033898306,
+      "macro_f1": 0.8002447192211494
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=5",
+      "threshold": 5.0,
+      "angle": "mean",
+      "n": null,
+      "coverage": 0.9749022164276401,
+      "accuracy_all": 0.8689700130378096,
+      "macro_f1": 0.8083339789563898
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=10",
+      "threshold": 10.0,
+      "angle": 0,
+      "n": 3068,
+      "coverage": 0.9902216427640157,
+      "accuracy_all": 0.8823337679269883,
+      "macro_f1": 0.8139749828945462
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=10",
+      "threshold": 10.0,
+      "angle": 15,
+      "n": 3068,
+      "coverage": 0.9788135593220338,
+      "accuracy_all": 0.8735332464146024,
+      "macro_f1": 0.8117852664807338
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=10",
+      "threshold": 10.0,
+      "angle": 30,
+      "n": 3068,
+      "coverage": 0.977509778357236,
+      "accuracy_all": 0.8745110821382008,
+      "macro_f1": 0.8139884128384737
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=10",
+      "threshold": 10.0,
+      "angle": 45,
+      "n": 3068,
+      "coverage": 0.9732724902216427,
+      "accuracy_all": 0.8666883963494133,
+      "macro_f1": 0.8096338278328287
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=10",
+      "threshold": 10.0,
+      "angle": 60,
+      "n": 3068,
+      "coverage": 0.9647979139504563,
+      "accuracy_all": 0.8611473272490222,
+      "macro_f1": 0.8022356576505368
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=10",
+      "threshold": 10.0,
+      "angle": 90,
+      "n": 3068,
+      "coverage": 0.9634941329856584,
+      "accuracy_all": 0.8565840938722294,
+      "macro_f1": 0.8004614703706779
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=10",
+      "threshold": 10.0,
+      "angle": "mean",
+      "n": null,
+      "coverage": 0.9746849196001738,
+      "accuracy_all": 0.8691329856584095,
+      "macro_f1": 0.8086799363446328
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=15",
+      "threshold": 15.0,
+      "angle": 0,
+      "n": 3068,
+      "coverage": 0.991851368970013,
+      "accuracy_all": 0.8846153846153846,
+      "macro_f1": 0.8150316968279163
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=15",
+      "threshold": 15.0,
+      "angle": 15,
+      "n": 3068,
+      "coverage": 0.9758800521512386,
+      "accuracy_all": 0.8702737940026075,
+      "macro_f1": 0.8102364414535865
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=15",
+      "threshold": 15.0,
+      "angle": 30,
+      "n": 3068,
+      "coverage": 0.9771838331160365,
+      "accuracy_all": 0.8748370273794003,
+      "macro_f1": 0.8144029500546797
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=15",
+      "threshold": 15.0,
+      "angle": 45,
+      "n": 3068,
+      "coverage": 0.9729465449804433,
+      "accuracy_all": 0.8670143415906127,
+      "macro_f1": 0.8088306143324867
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=15",
+      "threshold": 15.0,
+      "angle": 60,
+      "n": 3068,
+      "coverage": 0.9651238591916558,
+      "accuracy_all": 0.8604954367666232,
+      "macro_f1": 0.8011113822705594
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=15",
+      "threshold": 15.0,
+      "angle": 90,
+      "n": 3068,
+      "coverage": 0.9634941329856584,
+      "accuracy_all": 0.8565840938722294,
+      "macro_f1": 0.8003691673914741
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=15",
+      "threshold": 15.0,
+      "angle": "mean",
+      "n": null,
+      "coverage": 0.974413298565841,
+      "accuracy_all": 0.8689700130378096,
+      "macro_f1": 0.8083303753884504
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=20",
+      "threshold": 20.0,
+      "angle": 0,
+      "n": 3068,
+      "coverage": 0.9921773142112125,
+      "accuracy_all": 0.8852672750977836,
+      "macro_f1": 0.8157571992669027
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=20",
+      "threshold": 20.0,
+      "angle": 15,
+      "n": 3068,
+      "coverage": 0.9762059973924381,
+      "accuracy_all": 0.872555410691004,
+      "macro_f1": 0.8110389412047461
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=20",
+      "threshold": 20.0,
+      "angle": 30,
+      "n": 3068,
+      "coverage": 0.9745762711864406,
+      "accuracy_all": 0.871903520208605,
+      "macro_f1": 0.8130205773888685
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=20",
+      "threshold": 20.0,
+      "angle": 45,
+      "n": 3068,
+      "coverage": 0.9726205997392438,
+      "accuracy_all": 0.8653846153846154,
+      "macro_f1": 0.8085124595555814
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=20",
+      "threshold": 20.0,
+      "angle": 60,
+      "n": 3068,
+      "coverage": 0.9654498044328553,
+      "accuracy_all": 0.8595176010430248,
+      "macro_f1": 0.8005151810107988
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=20",
+      "threshold": 20.0,
+      "angle": 90,
+      "n": 3068,
+      "coverage": 0.9634941329856584,
+      "accuracy_all": 0.8569100391134289,
+      "macro_f1": 0.8005401161808617
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=20",
+      "threshold": 20.0,
+      "angle": "mean",
+      "n": null,
+      "coverage": 0.9740873533246415,
+      "accuracy_all": 0.8685897435897436,
+      "macro_f1": 0.8082307457679598
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=25",
+      "threshold": 25.0,
+      "angle": 0,
+      "n": 3068,
+      "coverage": 0.9921773142112125,
+      "accuracy_all": 0.8852672750977836,
+      "macro_f1": 0.8157571992669027
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=25",
+      "threshold": 25.0,
+      "angle": 15,
+      "n": 3068,
+      "coverage": 0.9758800521512386,
+      "accuracy_all": 0.8728813559322034,
+      "macro_f1": 0.8110465830550602
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=25",
+      "threshold": 25.0,
+      "angle": 30,
+      "n": 3068,
+      "coverage": 0.9703389830508474,
+      "accuracy_all": 0.8673402868318123,
+      "macro_f1": 0.8098888740124738
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=25",
+      "threshold": 25.0,
+      "angle": 45,
+      "n": 3068,
+      "coverage": 0.9716427640156454,
+      "accuracy_all": 0.8634289439374185,
+      "macro_f1": 0.8073016249256663
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=25",
+      "threshold": 25.0,
+      "angle": 60,
+      "n": 3068,
+      "coverage": 0.9651238591916558,
+      "accuracy_all": 0.8569100391134289,
+      "macro_f1": 0.7941381162499901
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=25",
+      "threshold": 25.0,
+      "angle": 90,
+      "n": 3068,
+      "coverage": 0.9628422425032594,
+      "accuracy_all": 0.8565840938722294,
+      "macro_f1": 0.8004965297482872
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=25",
+      "threshold": 25.0,
+      "angle": "mean",
+      "n": null,
+      "coverage": 0.9730008691873099,
+      "accuracy_all": 0.8670686657974794,
+      "macro_f1": 0.8064381545430633
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=30",
+      "threshold": 30.0,
+      "angle": 0,
+      "n": 3068,
+      "coverage": 0.992503259452412,
+      "accuracy_all": 0.885593220338983,
+      "macro_f1": 0.8158706353449636
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=30",
+      "threshold": 30.0,
+      "angle": 15,
+      "n": 3068,
+      "coverage": 0.9762059973924381,
+      "accuracy_all": 0.8732073011734028,
+      "macro_f1": 0.8112149846533555
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=30",
+      "threshold": 30.0,
+      "angle": 30,
+      "n": 3068,
+      "coverage": 0.9621903520208605,
+      "accuracy_all": 0.8591916558018253,
+      "macro_f1": 0.7987410553364066
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=30",
+      "threshold": 30.0,
+      "angle": 45,
+      "n": 3068,
+      "coverage": 0.9709908735332464,
+      "accuracy_all": 0.8608213820078227,
+      "macro_f1": 0.8032687343368098
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=30",
+      "threshold": 30.0,
+      "angle": 60,
+      "n": 3068,
+      "coverage": 0.9647979139504563,
+      "accuracy_all": 0.8549543676662321,
+      "macro_f1": 0.7906683218940446
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=30",
+      "threshold": 30.0,
+      "angle": 90,
+      "n": 3068,
+      "coverage": 0.9631681877444589,
+      "accuracy_all": 0.8565840938722294,
+      "macro_f1": 0.8004739356038578
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=30",
+      "threshold": 30.0,
+      "angle": "mean",
+      "n": null,
+      "coverage": 0.9716427640156454,
+      "accuracy_all": 0.8650586701434159,
+      "macro_f1": 0.8033729445282396
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=35",
+      "threshold": 35.0,
+      "angle": 0,
+      "n": 3068,
+      "coverage": 0.992503259452412,
+      "accuracy_all": 0.885593220338983,
+      "macro_f1": 0.8158706353449636
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=35",
+      "threshold": 35.0,
+      "angle": 15,
+      "n": 3068,
+      "coverage": 0.9762059973924381,
+      "accuracy_all": 0.8732073011734028,
+      "macro_f1": 0.8112149846533555
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=35",
+      "threshold": 35.0,
+      "angle": 30,
+      "n": 3068,
+      "coverage": 0.9589308996088657,
+      "accuracy_all": 0.8529986962190352,
+      "macro_f1": 0.795243640648141
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=35",
+      "threshold": 35.0,
+      "angle": 45,
+      "n": 3068,
+      "coverage": 0.9674054758800521,
+      "accuracy_all": 0.8546284224250326,
+      "macro_f1": 0.7980550035273711
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=35",
+      "threshold": 35.0,
+      "angle": 60,
+      "n": 3068,
+      "coverage": 0.9638200782268579,
+      "accuracy_all": 0.8510430247718384,
+      "macro_f1": 0.787996008392531
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=35",
+      "threshold": 35.0,
+      "angle": 90,
+      "n": 3068,
+      "coverage": 0.9631681877444589,
+      "accuracy_all": 0.85625814863103,
+      "macro_f1": 0.8002828722060894
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=35",
+      "threshold": 35.0,
+      "angle": "mean",
+      "n": null,
+      "coverage": 0.9703389830508474,
+      "accuracy_all": 0.8622881355932203,
+      "macro_f1": 0.8014438574620754
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=40",
+      "threshold": 40.0,
+      "angle": 0,
+      "n": 3068,
+      "coverage": 0.992503259452412,
+      "accuracy_all": 0.885593220338983,
+      "macro_f1": 0.8158706353449636
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=40",
+      "threshold": 40.0,
+      "angle": 15,
+      "n": 3068,
+      "coverage": 0.9762059973924381,
+      "accuracy_all": 0.8732073011734028,
+      "macro_f1": 0.8112149846533555
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=40",
+      "threshold": 40.0,
+      "angle": 30,
+      "n": 3068,
+      "coverage": 0.9579530638852672,
+      "accuracy_all": 0.8520208604954368,
+      "macro_f1": 0.795405114136252
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=40",
+      "threshold": 40.0,
+      "angle": 45,
+      "n": 3068,
+      "coverage": 0.961864406779661,
+      "accuracy_all": 0.8428943937418514,
+      "macro_f1": 0.7823973711283962
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=40",
+      "threshold": 40.0,
+      "angle": 60,
+      "n": 3068,
+      "coverage": 0.9599087353324641,
+      "accuracy_all": 0.8441981747066493,
+      "macro_f1": 0.7821434692705581
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=40",
+      "threshold": 40.0,
+      "angle": 90,
+      "n": 3068,
+      "coverage": 0.9628422425032594,
+      "accuracy_all": 0.85625814863103,
+      "macro_f1": 0.8004632047908994
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=40",
+      "threshold": 40.0,
+      "angle": "mean",
+      "n": null,
+      "coverage": 0.9685462842242503,
+      "accuracy_all": 0.8590286831812256,
+      "macro_f1": 0.7979157965540709
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=50",
+      "threshold": 50.0,
+      "angle": 0,
+      "n": 3068,
+      "coverage": 0.992503259452412,
+      "accuracy_all": 0.885593220338983,
+      "macro_f1": 0.8158706353449636
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=50",
+      "threshold": 50.0,
+      "angle": 15,
+      "n": 3068,
+      "coverage": 0.9762059973924381,
+      "accuracy_all": 0.8732073011734028,
+      "macro_f1": 0.8112149846533555
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=50",
+      "threshold": 50.0,
+      "angle": 30,
+      "n": 3068,
+      "coverage": 0.9579530638852672,
+      "accuracy_all": 0.8520208604954368,
+      "macro_f1": 0.795405114136252
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=50",
+      "threshold": 50.0,
+      "angle": 45,
+      "n": 3068,
+      "coverage": 0.9488265971316818,
+      "accuracy_all": 0.8083441981747066,
+      "macro_f1": 0.7473134473391658
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=50",
+      "threshold": 50.0,
+      "angle": 60,
+      "n": 3068,
+      "coverage": 0.953715775749674,
+      "accuracy_all": 0.8243155149934811,
+      "macro_f1": 0.7541330231437057
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=50",
+      "threshold": 50.0,
+      "angle": 90,
+      "n": 3068,
+      "coverage": 0.9634941329856584,
+      "accuracy_all": 0.8546284224250326,
+      "macro_f1": 0.7987247861137418
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=50",
+      "threshold": 50.0,
+      "angle": "mean",
+      "n": null,
+      "coverage": 0.9654498044328553,
+      "accuracy_all": 0.8496849196001738,
+      "macro_f1": 0.7871103317885307
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=60",
+      "threshold": 60.0,
+      "angle": 0,
+      "n": 3068,
+      "coverage": 0.992503259452412,
+      "accuracy_all": 0.885593220338983,
+      "macro_f1": 0.8158706353449636
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=60",
+      "threshold": 60.0,
+      "angle": 15,
+      "n": 3068,
+      "coverage": 0.9762059973924381,
+      "accuracy_all": 0.8732073011734028,
+      "macro_f1": 0.8112149846533555
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=60",
+      "threshold": 60.0,
+      "angle": 30,
+      "n": 3068,
+      "coverage": 0.9579530638852672,
+      "accuracy_all": 0.8520208604954368,
+      "macro_f1": 0.795405114136252
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=60",
+      "threshold": 60.0,
+      "angle": 45,
+      "n": 3068,
+      "coverage": 0.9465449804432855,
+      "accuracy_all": 0.8063885267275098,
+      "macro_f1": 0.7475089076390085
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=60",
+      "threshold": 60.0,
+      "angle": 60,
+      "n": 3068,
+      "coverage": 0.93122555410691,
+      "accuracy_all": 0.7262059973924381,
+      "macro_f1": 0.6231970193297082
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=60",
+      "threshold": 60.0,
+      "angle": 90,
+      "n": 3068,
+      "coverage": 0.96251629726206,
+      "accuracy_all": 0.8523468057366362,
+      "macro_f1": 0.7923777339961536
+    },
+    {
+      "model": "ma3d_rafdb",
+      "policy": "T=60",
+      "threshold": 60.0,
+      "angle": "mean",
+      "n": null,
+      "coverage": 0.9611581920903954,
+      "accuracy_all": 0.8326271186440678,
+      "macro_f1": 0.7642623991832402
+    }
+  ],
+  "recommendation": {
+    "poster_rafdb": {
+      "policy": "T=15",
+      "mean_accuracy_all": 0.8638635375923512,
+      "upright_loss_points": 0.0651890482398998
+    },
+    "ma3d_rafdb": {
+      "policy": "T=15",
+      "mean_accuracy_all": 0.8689700130378096,
+      "upright_loss_points": 0.09778357235984414
+    }
+  },
+  "note": "Failures count as wrong. Rule: corrected if |estimated roll| >= T else raw. Recommendation = best mean accuracy over angles with <= 0.2 pt loss at 0 deg."
+}

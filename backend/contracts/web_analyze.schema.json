@@ -1,0 +1,278 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "web_analyze.schema.json",
+  "title": "Dữ liệu tổng hợp để frontend/app.py vẽ giao diện (B3, rút gọn theo ADR-012)",
+  "description": "contract_version 0.3.0 (ADR-019 + ADR-020; 0.2.0: ADR-013). Theo ADR-004/012 gốc đây là response HTTP backend->frontend; sau ADR-012 (gộp thành 1 tiến trình Streamlit) đây là dict Python nội bộ nối kết quả của emoca_client + engine trước khi app.py hiển thị. Giữ hình dạng để không phải viết lại UI nếu sau này tách lại thành API thật.",
+  "type": "object",
+  "required": [
+    "contract_version",
+    "status",
+    "image",
+    "faces",
+    "warnings",
+    "error"
+  ],
+  "properties": {
+    "contract_version": {
+      "const": "0.3.0"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "ok",
+        "partial",
+        "error"
+      ]
+    },
+    "image": {
+      "type": "object",
+      "required": [
+        "width",
+        "height"
+      ],
+      "properties": {
+        "width": {
+          "type": "integer"
+        },
+        "height": {
+          "type": "integer"
+        }
+      }
+    },
+    "faces": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "face_index",
+          "bbox_original_px",
+          "landmarks",
+          "renders",
+          "predictions",
+          "warnings"
+        ],
+        "properties": {
+          "face_index": {
+            "type": "integer"
+          },
+          "bbox_original_px": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 4,
+            "maxItems": 4
+          },
+          "crop_transform": {
+            "type": "object",
+            "required": [
+              "from",
+              "to",
+              "matrix_3x3"
+            ],
+            "properties": {
+              "from": {
+                "const": "original_px"
+              },
+              "to": {
+                "const": "crop224"
+              },
+              "matrix_3x3": {
+                "type": "array",
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  },
+                  "minItems": 3,
+                  "maxItems": 3
+                },
+                "minItems": 3,
+                "maxItems": 3
+              }
+            }
+          },
+          "crop_image": {
+            "type": "object",
+            "required": [
+              "format",
+              "b64"
+            ],
+            "properties": {
+              "format": {
+                "type": "string",
+                "enum": [
+                  "png",
+                  "jpeg"
+                ]
+              },
+              "b64": {
+                "type": "string"
+              }
+            },
+            "description": "ADR-019 (tuỳ chọn): đúng crop 224×224 mà EMOCA cắt và engine nhận (hệ crop224)."
+          },
+          "landmarks_crop224": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "minItems": 68,
+            "maxItems": 68,
+            "description": "ADR-019 (tuỳ chọn): landmarks.crop224 của emoca_analyze (hệ crop224)."
+          },
+          "model_input": {
+            "type": "object",
+            "required": [
+              "image",
+              "transform",
+              "size"
+            ],
+            "description": "ADR-020 (tuỳ chọn): ảnh POSTER/MA3D-Net THẬT SỰ nhận — căn chỉnh kiểu RAF-DB từ landmark; attention phủ lên ảnh này.",
+            "properties": {
+              "image": {
+                "type": "object",
+                "required": [
+                  "format",
+                  "b64"
+                ],
+                "properties": {
+                  "format": {
+                    "type": "string",
+                    "enum": [
+                      "png",
+                      "jpeg"
+                    ]
+                  },
+                  "b64": {
+                    "type": "string"
+                  }
+                }
+              },
+              "transform": {
+                "type": "object",
+                "required": [
+                  "from",
+                  "to",
+                  "matrix_3x3"
+                ],
+                "properties": {
+                  "from": {
+                    "const": "original_px"
+                  },
+                  "to": {
+                    "const": "model_input"
+                  },
+                  "matrix_3x3": {
+                    "type": "array",
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "number"
+                      },
+                      "minItems": 3,
+                      "maxItems": 3
+                    },
+                    "minItems": 3,
+                    "maxItems": 3
+                  }
+                }
+              },
+              "size": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "minItems": 2,
+                "maxItems": 2
+              }
+            }
+          },
+          "landmarks": {
+            "type": "object",
+            "required": [
+              "space",
+              "n_points",
+              "points"
+            ],
+            "properties": {
+              "space": {
+                "const": "original_px"
+              },
+              "n_points": {
+                "type": "integer"
+              },
+              "points": {
+                "type": "array",
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  },
+                  "minItems": 2,
+                  "maxItems": 2
+                }
+              }
+            }
+          },
+          "renders": {
+            "type": "object"
+          },
+          "predictions": {
+            "type": "array"
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "models_info": {
+      "type": "array"
+    },
+    "timing_ms": {
+      "type": "object"
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "error": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "required": [
+            "code",
+            "message",
+            "retryable"
+          ],
+          "properties": {
+            "code": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            },
+            "retryable": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

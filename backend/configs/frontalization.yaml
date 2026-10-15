@@ -1,0 +1,7 @@
+schema_version: 1
+# ADR-029: enable 2D roll correction in the baseline path by default.
+enabled_in_baseline: true
+# ADR-028: roll-only 2D correction threshold. Chosen 2026-10-04 from the Kaggle roll sweep
+# (documents/docs/qa/M8_KAGGLE_RESULTS_2026-10-03.md §3, data database/results/M8_ROLL/roll_sweep/): best mean Acc(all) over
+# 0/15/30/45/60/90° with <= 0.2 pt loss on upright images, for both POSTER and MA3D-Net.
+roll_threshold_deg: 15

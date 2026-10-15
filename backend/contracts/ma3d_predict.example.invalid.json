@@ -1,0 +1,44 @@
+{
+  "contract_version": "0.3.0",
+  "service": "ma3d_svc",
+  "predictions": [
+    {
+      "model_id": "poster_rafdb",
+      "status": "ok",
+      "display_name": "POSTER (RAF-DB)",
+      "dataset": "RAF-DB",
+      "labels": [
+        "surprise",
+        "fear",
+        "disgust",
+        "happiness",
+        "sadness",
+        "anger",
+        "neutral"
+      ],
+      "probs": [
+        0.05,
+        0.3,
+        0.02,
+        0.1,
+        0.05,
+        0.03
+      ],
+      "top1": {
+        "index": 6,
+        "label": "neutral",
+        "prob": 0.45
+      },
+      "latency_ms": 42.0
+    },
+    {
+      "model_id": "ma3d_rafdb",
+      "status": "error",
+      "error": {
+        "code": "gpu_on_fire",
+        "message": "...",
+        "retryable": false
+      }
+    }
+  ]
+}

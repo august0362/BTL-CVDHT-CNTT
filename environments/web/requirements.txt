@@ -1,0 +1,10 @@
+# web/ — giao diện Streamlit (ADR-012), CHỈ chế độ mock. Đã kiểm với Python 3.13.7 trong venv ngoài dự án.
+# Cần Python >= 3.10: app.py dùng tham số width="stretch" của Streamlit mới, và bản Streamlit mới
+# không còn hỗ trợ Python 3.8.
+# Không còn plotly: bản đồ nhiệt vẽ bằng HTML/CSS thuần (frontend/app.py) để đọc được cả khi
+# trình duyệt bật chế độ tối cưỡng bức. Radar chart đã bị bỏ theo ADR-024.
+# POSTER/MA3D-Net THẬT (torch CPU) và thư viện chạy test: xem environments/web/requirements-real.txt.
+streamlit==1.64.0
+pillow==12.3.0
+pyyaml==6.0.3  # web/orchestrator.py và web/theme.py chỉ import khi có configs/*.yaml
+# Chạy test ở chế độ mock cần thêm: jsonschema==4.26.0 (đã có trong requirements-real.txt)

@@ -1,0 +1,17 @@
+{
+  "model_name": "3DDFA-V2 (MobileNetV1 x1.0, 120x120)",
+  "framework": "PyTorch (CPU, web process)",
+  "task": "3DMM regression (12 pose + 40 shape + 10 expression) for opt-in face frontalization (ADR-026)",
+  "source_repo": "https://github.com/cleardusk/3DDFA_V2",
+  "source_commit": "1b6c67601abffc1e9f248b291708aef0e43b55ae",
+  "source_checkout_path": "third_party/3DDFA_V2",
+  "files": {
+    "mb1_120x120.pth": {"from": "weights/mb1_120x120.pth", "size_bytes": 13755269, "sha256": "a45a946c6e9b16f8d3cf2e69376da9560a7cf9afae671bebceb7e437a405ea79"},
+    "bfm_noneck_v3.pkl": {"from": "configs/bfm_noneck_v3.pkl", "size_bytes": 24393598, "sha256": "89ac96480eddc331120f2c8401737c55a5fcc97b10f8a64574e63976c3d246ca"},
+    "param_mean_std_62d_120x120.pkl": {"from": "configs/param_mean_std_62d_120x120.pkl", "size_bytes": 713, "sha256": "090d7150f77cb66c29ddae21e4508fbde59123dcd1dea7facc24a7ed06d1c795"},
+    "tri.pkl": {"from": "configs/tri.pkl", "size_bytes": 913040, "sha256": "0562a594d8369f7d1c86306522ff76fd3a2c81cf90ba9443893c1191ad0abbb8"}
+  },
+  "license_status": "Code MIT (3DDFA_V2 LICENSE). BFM-derived files follow Basel Face Model terms (non-commercial research). User confirmed non-commercial research use on 2026-10-03.",
+  "integrity_reference": "SHA-256 measured locally from files committed in the upstream repo at the pinned commit; no independent release digest.",
+  "artifact_status": "present; not committed (*.pth, *.pkl in .gitignore)"
+}

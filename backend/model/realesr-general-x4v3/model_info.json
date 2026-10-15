@@ -1,0 +1,17 @@
+{
+  "model_name": "realesr-general-x4v3",
+  "architecture": "Real-ESRGAN general compact x4v3",
+  "framework": "PyTorch via Spandrel",
+  "task": "general-image-restoration",
+  "scale_factor": 4,
+  "checkpoint_filename": "realesr-general-x4v3.pth",
+  "source_url": "https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesr-general-x4v3.pth",
+  "source_revision": "v0.2.5.0",
+  "file_size_bytes": 4885111,
+  "sha256": "8DC7EDB9AC80CCDC30C3A5DCA6616509367F05FBC184AD95B731F05BECE96292",
+  "integrity_status": "Local SHA-256 measured; no independent upstream checksum comparison performed",
+  "license": "BSD-3-Clause (upstream repository); preserve attribution and license notice",
+  "intended_use": "Non-commercial academic research",
+  "artifact_status": "User-provided checkpoint present; Spandrel load/inference smoke pending",
+  "notes": "Upstream describes x4v3 as a compact model with lower GPU memory/time use and weaker deblur/denoise capacity than the larger general model. Pipeline resizes x4 output to source dimensions before face detection."
+}

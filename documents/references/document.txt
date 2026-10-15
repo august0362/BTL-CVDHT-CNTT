@@ -1,0 +1,6 @@
+lỗi mặt nghiêng -> EMOCA không dự đoán đúng với mặt nghiêng
+VD: ảnh mặt nghiêng có độ dự đoán là 27% vui -> ảnh mặt thẳng có độ dự đoán là 89% vui
+từ đó có thể thấy, ta cần 1 model nữa để nhận biết ảnh face nghiêng sang face thẳng -> nghiên cứu bài báo về vấn đề này
+
+
+mặt tức giận dễ nhầm sang buồn hoặc another emotion -> hàm loss?, đọc kĩ hàm loss, nghiên cứu hàm loss

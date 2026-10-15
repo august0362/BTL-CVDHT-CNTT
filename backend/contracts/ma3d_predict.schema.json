@@ -1,0 +1,213 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ma3d_predict.schema.json",
+  "title": "Kết quả suy luận POSTER/MA3D-Net (B2)",
+  "description": "contract_version 0.3.0 (ADR-019; 0.2.0: ADR-013) — xem docs/context/CONTRACTS_ADR.md Phần B2. Theo ADR-012, đây KHÔNG còn là response HTTP của một service riêng — là giá trị trả về nội bộ của hàm predict() trong web/engine.py. Giữ nguyên hình dạng để dễ tách lại thành service sau này.",
+  "type": "object",
+  "required": [
+    "contract_version",
+    "service",
+    "predictions"
+  ],
+  "properties": {
+    "contract_version": {
+      "const": "0.3.0"
+    },
+    "service": {
+      "const": "ma3d_svc"
+    },
+    "predictions": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "$ref": "#/$defs/prediction_ok"
+          },
+          {
+            "$ref": "#/$defs/prediction_error"
+          }
+        ]
+      }
+    }
+  },
+  "$defs": {
+    "prediction_ok": {
+      "type": "object",
+      "required": [
+        "model_id",
+        "status",
+        "display_name",
+        "dataset",
+        "labels",
+        "probs",
+        "top1",
+        "latency_ms"
+      ],
+      "properties": {
+        "model_id": {
+          "type": "string"
+        },
+        "status": {
+          "const": "ok"
+        },
+        "display_name": {
+          "type": "string"
+        },
+        "dataset": {
+          "type": "string"
+        },
+        "labels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "probs": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "minItems": 1
+        },
+        "top1": {
+          "type": "object",
+          "required": [
+            "index",
+            "label",
+            "prob"
+          ],
+          "properties": {
+            "index": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "label": {
+              "type": "string"
+            },
+            "prob": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          }
+        },
+        "attention": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/grid_map"
+            }
+          ]
+        },
+        "feature_maps": {
+          "description": "ADR-013: ảnh trung gian 7×7 trên crop224, chuẩn L2 theo kênh rồi min-max 0..1 trong từng bản đồ. fusion_delta chỉ có ở MA3D.",
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "required": [
+                "image_backbone",
+                "landmark_backbone"
+              ],
+              "properties": {
+                "image_backbone": {
+                  "$ref": "#/$defs/grid_map"
+                },
+                "landmark_backbone": {
+                  "$ref": "#/$defs/grid_map"
+                },
+                "fusion_delta": {
+                  "$ref": "#/$defs/grid_map"
+                }
+              },
+              "additionalProperties": false
+            }
+          ]
+        },
+        "latency_ms": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "prediction_error": {
+      "type": "object",
+      "required": [
+        "model_id",
+        "status",
+        "error"
+      ],
+      "properties": {
+        "model_id": {
+          "type": "string"
+        },
+        "status": {
+          "const": "error"
+        },
+        "error": {
+          "type": "object",
+          "required": [
+            "code",
+            "message",
+            "retryable"
+          ],
+          "properties": {
+            "code": {
+              "type": "string",
+              "enum": [
+                "model_unavailable",
+                "codes_missing",
+                "timeout",
+                "contract_mismatch"
+              ]
+            },
+            "message": {
+              "type": "string"
+            },
+            "retryable": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    "grid_map": {
+      "type": "object",
+      "required": [
+        "space",
+        "grid",
+        "values"
+      ],
+      "properties": {
+        "space": {
+          "const": "crop224"
+        },
+        "grid": {
+          "type": "array",
+          "items": {
+            "const": 7
+          },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "minItems": 49,
+          "maxItems": 49
+        }
+      }
+    }
+  }
+}

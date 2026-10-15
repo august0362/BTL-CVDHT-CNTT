@@ -1,0 +1,20 @@
+Patch:    0101-facevideodm-annotation-list-guard   [TUY CHON - chi cho demo video]
+Upstream: radekd91/emoca @ e0be0db (release/EMOCA_v2)
+Files:    gdl/datasets/FaceVideoDataModule.py
+Ly do:    TestFaceVideoDM._gather_data dat `annotation_list = []` (khong phai None) nen vong go video hong
+          trong `_gather_video_metadata` (`del self.annotation_list[vi]`) nem IndexError khi ffmpeg.probe loi.
+          Vá chi doi loi thanh "bo qua video hong"; CHUA chung minh can cho video hop le. Khong dung cho demo anh.
+
+diff --git a/gdl/datasets/FaceVideoDataModule.py b/gdl/datasets/FaceVideoDataModule.py
+index a27c4cb..dc4fc2f 100644
+--- a/gdl/datasets/FaceVideoDataModule.py
++++ b/gdl/datasets/FaceVideoDataModule.py
+@@ -1565,7 +1565,7 @@ class FaceVideoDataModule(FaceDataModuleBase):
+         for vi in sorted(invalid_videos, reverse=True):
+             del self.video_list[vi]
+             del self.video_metas[vi]
+-            if self.annotation_list is not None:
++            if self.annotation_list is not None and 0 <= vi < len(self.annotation_list):
+                 del self.annotation_list[vi]
+     
+             if hasattr(self, "audio_metas") and self.audio_metas is not None:

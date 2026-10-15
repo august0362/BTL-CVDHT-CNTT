@@ -1,0 +1,23 @@
+{
+  "contract_version": "0.3.0",
+  "status": "partial",
+  "image": {
+    "width": 640,
+    "height": 480
+  },
+  "faces": [],
+  "models_info": [],
+  "timing_ms": {
+    "emoca": 0.0,
+    "ma3d": 0.0,
+    "total": 0.0
+  },
+  "warnings": [
+    "emoca_svc_unavailable"
+  ],
+  "error": {
+    "code": "service_unavailable",
+    "message": "emoca_svc không phản hồi (giả lập).",
+    "retryable": true
+  }
+}

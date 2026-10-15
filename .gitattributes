@@ -1,0 +1,7 @@
+# Script/patch chạy trong Linux (container, WSL) phải giữ LF dù clone trên Windows.
+*.sh        text eol=lf
+*.patch     -text
+*.yml       text eol=lf
+*.yaml      text eol=lf
+*Dockerfile text eol=lf
+*.bat       text eol=crlf

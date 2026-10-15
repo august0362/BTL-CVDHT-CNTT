@@ -1,0 +1,8 @@
+# Isolated environment: python -m venv .venv-m6; activate; pip install -r environments/m6/requirements-m6.txt
+numpy==1.26.4
+Pillow==11.3.0
+pytest==8.4.2
+ultralytics==8.4.166
+spandrel==0.4.1
+scipy
+# Install a matching PyTorch/torchvision build separately for CPU/CUDA/MPS.
