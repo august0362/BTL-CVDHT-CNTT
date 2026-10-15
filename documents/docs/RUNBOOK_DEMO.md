@@ -99,9 +99,8 @@ Rồi mở **http://127.0.0.1:8599** trong trình duyệt. (Bỏ `--server.port`
 **Cờ tuỳ chọn:** `--server.fileWatcherType poll` — thêm khi bạn đang **sửa mã** và muốn server tự nạp lại (Session 07).
 
 **Khi nào PHẢI tắt (Ctrl+C) rồi chạy lại server:**
-- sau khi sửa module phụ của `backend/web/` (`orchestrator.py`, `engine.py`, `emoca_client.py`, `mock_data.py`, `theme.py`) — server đang chạy có thể giữ bản cũ trong bộ nhớ (đã gặp: `ImportError: check_emoca`, Session 08). Sửa `app.py` thì Streamlit tự hỏi "Rerun";
+- sau khi sửa module phụ của `backend/web/` (`orchestrator.py`, `engine.py`, `emoca_client.py`, `mock_data.py`) — server đang chạy có thể giữ bản cũ trong bộ nhớ (đã gặp: `ImportError: check_emoca`, Session 08). Sửa `app.py` thì Streamlit tự hỏi "Rerun";
 - sau khi đổi biến môi trường (`EMOCA_*`, `ENGINE_MODE`) hoặc cài thêm thư viện;
-- **không** cần khởi động lại khi thêm/sửa ảnh trong `frontend/assets/theme/` (cache tự làm mới theo thời gian sửa file, `frontend/app.py`, hàm `_signature`).
 
 **Kỳ vọng ở chế độ mock:** tải một ảnh JPEG/PNG/WebP bất kỳ (≥ 32 px cạnh ngắn) → có landmark, ảnh dựng, xác suất 7 nhãn của hai mô hình, và nhãn **MOCK** trên đầu trang. Mọi con số là **dữ liệu giả** (xem mục 7).
 
@@ -126,28 +125,9 @@ Hai tệp ở gốc dự án, bấm đúp là chạy. Không cần quyền quả
 - Thời gian khởi động từ đầu (stop → run): **chưa đo** — xem báo cáo của lần thử đầu.
 - Hai tệp chỉ dùng ký tự ASCII và dòng CRLF, vì `cmd` đọc `.bat` theo code page. Đường dẫn dự án lấy từ `%~dp0` nên chạy được ở thư mục có dấu tiếng Việt và khoảng trắng.
 
-## 3. Cài đặt trên giao diện (bảng "Cài đặt" ở đầu trang)
+## 3. Giao diện tối giản
 
-Mô tả theo `frontend/app.py` (`render_settings`, `render_engine_panel`, `render_emoca_panel`).
-
-Bảng **Cài đặt** (biểu tượng bánh răng) nằm ngay dưới tiêu đề trang, **mặc định đóng** — bấm vào để mở/đóng. Khi mở chia 3 cột: **Giao diện** | **Hiển thị** + **Mô hình POSTER / MA3D-Net** | **Kết nối EMOCA** + **Khác**. Trang không còn thanh bên (sidebar) — bản cũ đặt Cài đặt ở thanh bên, đã bỏ vì thu gọn thanh bên rồi thì không mở lại được (`frontend/app.py:300`).
-
-| Nhóm | Điều khiển | Giá trị | Ghi lên địa chỉ trang? |
-|---|---|---|---|
-| Giao diện | **Chủ đề màu** | 24 chủ đề, mỗi chủ đề 4 màu lấy từ một ảnh trong `frontend/assets/theme/`; mặc định `cold`. Ảnh hỏng/trùng màu bị loại, lý do nằm trong mục "Ghi chú nguồn màu" | `t` |
-| | **Chế độ** | Sáng / Tối (độc lập với chế độ tối của Windows/trình duyệt) | `m` |
-| | **Độ tương phản** | Chuẩn / Cao (màu chữ, nút, viền tự chỉnh để đạt WCAG; Cao chặt hơn) | `c` |
-| | **Cỡ chữ** | Nhỏ / Vừa / Lớn | `f` |
-| | **Giảm chuyển động** | bật/tắt hiệu ứng chuyển mượt | `rm` |
-| Hiển thị | Hiện landmark trên ảnh · Hiện khung mặt · Hiện ảnh trung gian & attention | bật/tắt | `lm`, `bb`, `at` |
-| Mô hình POSTER / MA3D-Net | **Suy luận** | Giả lập / Thật (CPU) — mặc định lấy từ `ENGINE_MODE` hoặc `backend/configs/services.yaml` | không |
-| Kết nối EMOCA | **Nguồn EMOCA** | Giả lập / Máy chủ EMOCA — xem mục 4 | không (có token) |
-| Khác | **Đặt lại cài đặt** | về mặc định (chủ đề `cold`, Sáng, Chuẩn, Vừa) | — |
-
-- Cài đặt giao diện được ghi lên địa chỉ trang (`?t=cold&m=dark&c=high…`) nên tải lại/chia sẻ link vẫn giữ nguyên; giá trị lạ tự về mặc định (ADR-014 mục 2).
-- Địa chỉ EMOCA, token, xác nhận gửi ảnh và chế độ suy luận **chỉ** nằm trong bộ nhớ phiên, không lên địa chỉ trang.
-- Nếu trình duyệt bật "ép tối mọi trang" (Cốc Cốc/Chrome), trang vẫn đọc được nhưng màu chủ đề bị trình duyệt đổi; muốn thấy đúng màu thì tắt tính năng đó trong trình duyệt (ADR-014, đã đo ở Session 07).
-- Bộ chọn "Suy luận" mới được thêm vào `frontend/app.py` trong ngày viết tài liệu; nếu giao diện khác mô tả, đọc lại `render_engine_panel` **(chưa kiểm bằng mắt)**.
+Giao diện tối giản (ADR-032): chỉ có tiêu đề, ô tải ảnh và khối **Kết quả trực quan** — mỗi mặt một hàng: Input · Rotated Face (chỉ khi có mặt được xoay) · Facial Landmark · 3DMM · POSTER · MA3D-Net. Không còn bảng Cài đặt, chủ đề màu hay Pipeline Studio; màu và cỡ chữ cố định trong `frontend/style.css`. EMOCA và POSTER/MA3D-Net luôn chạy thật; địa chỉ/token EMOCA lấy từ `EMOCA_URL`/`EMOCA_TOKEN` hoặc `backend/configs/services.yaml`. Hiện % xác suất cạnh nhãn dự đoán: `backend/configs/ui.yaml` `show_probability: true` (mặc định `false`, tải lại trang là có hiệu lực). Giới hạn ảnh tải lên: `backend/configs/services.yaml` (`limits`).
 
 ---
 
@@ -323,7 +303,7 @@ bash ~/emoca_wsl/bin/run_emoca_server.sh        # Ctrl+C để dừng
 - Nghe `127.0.0.1:8765` (`run_emoca_server.sh:2`, `:94-95`, `common.sh:21`). Log ở `~/emoca_wsl/out/server.log`, xoay vòng khi > 50 MB (`:11`, `:34`).
 - `EMOCA_TOKEN` **tuỳ chọn**: không đặt thì không xác thực, chấp nhận được vì chỉ nghe loopback (`:8-9`, `:30-31`).
 - **Đo VRAM:** trong suốt lúc server chạy, script lấy mẫu `GET /v1/health` mỗi `VRAM_SAMPLE_SEC` giây (mặc định 5) và ghi vào `~/emoca_wsl/out/server_vram_health.json` (`:12-14`, `:22`, `:37-77`). Các trường giống `smoke_vram_health.json`: `min_gpu_free_mb`, `max_vram_reserved_peak_mb`, `max_vram_peak_mb`…. Không dùng `nvidia-smi memory.used`.
-- **Nối web trên Windows:** Cài đặt → Kết nối EMOCA → **Máy chủ EMOCA**, địa chỉ `http://127.0.0.1:8765`. Đây là loopback nên **không cần** ô xác nhận gửi ảnh (mục 4d, ADR-015 quyết định 5). Hoặc đặt biến môi trường `EMOCA_MODE=real` và `EMOCA_URL=http://127.0.0.1:8765` (`backend/web/orchestrator.py:12-13`). *Từ 2026-09-26:* `backend/configs/services.yaml` đã đặt sẵn `emoca_svc.url: http://127.0.0.1:8765` (`:16`) nhưng `mode` **vẫn là `mock`** (`:20`) — web vẫn mặc định giả lập; chọn **Máy chủ EMOCA** trên giao diện hoặc đặt `EMOCA_MODE=real` để dùng EMOCA thật (khi đó không cần `EMOCA_URL`).
+- **Nối web trên Windows:** giao diện luôn gọi EMOCA thật; địa chỉ `http://127.0.0.1:8765` đã đặt sẵn trong `backend/configs/services.yaml` (`emoca_svc.url`), hoặc đặt `EMOCA_URL` trước khi chạy Streamlit. Đây là loopback nên không cần xác nhận gửi ảnh (mục 4d, ADR-015).
 
 **Điểm mới của bản sửa (đã hoán đổi 2026-09-25; chỉ kiểm tĩnh bằng đọc mã):**
 - **Mã thoát 12:** thiếu gói hệ thống mà `sudo` cần mật khẩu, trong khi script không có terminal để hỏi. Khi đó script **in sẵn lệnh cho bạn tự chạy** (`sudo dpkg --configure -a`, `sudo apt-get update && sudo apt-get install -y …`) rồi thoát 12 (`setup_emoca_wsl.sh:26`, `:125-134`). Có terminal thì script tự gọi `sudo` như cũ.
@@ -524,7 +504,7 @@ Ra file `another/notebooks/emoca_svc_bundle.zip` (không commit). Đổi nơi gh
 | 7 | Chạy (chờ tới 15 phút) | JSON health có `"loaded": true`, `device` là GPU; `[server nạp mô hình + sẵn sàng]` | `server.py đã thoát` ⇒ ô tự in 3000 ký tự cuối `server.log`; gửi |
 | **8** | Chạy 2 ô | `PASS: mọi phản hồi đúng emoca_analyze.schema.json…`, `M1-03 AC2 ĐẠT`, `M1-03 AC5 ĐẠT`, dòng VRAM, `Miền landmark…`; rồi ảnh chồng + `NME toàn bộ`. **NHÌN ảnh chồng**: chấm đỏ phải rơi đúng mắt/mũi/miệng/hàm trên ảnh gốc (M0-05) | NME > 0.3 hoặc chấm đỏ lệch một chiều ⇒ nghi sai hệ toạ độ: **chụp ảnh gửi** — đây đúng là điều M0-05 cần bắt |
 | 9 | *Nên làm luôn trong phiên này* (mỗi phiên mới phải dựng env lại từ đầu): chạy ô tunnel, ô POST thử, ô in địa chỉ, ô 9c (token hiện một lần, sao chép rồi Enter) | `Tunnel hoạt động; token sai bị từ chối 401`, `PASS: phản hồi qua tunnel…`; in **Địa chỉ** và bảng thời gian từng chặng (`TỔNG`) | Tunnel không lên ⇒ chờ rồi chạy lại ô; gửi `/content/tunnel.log` |
-| — | **Thử web ngay lúc này** (giữ phiên Colab): web ⚙ Cài đặt → Kết nối EMOCA → Máy chủ EMOCA → dán địa chỉ + token → *Kiểm tra kết nối* → bật xác nhận gửi ảnh → tải **ảnh của bạn hoặc ảnh công khai** → Phân tích | Ảnh landmark/3DMM hiện là **dữ liệu thật**, chip `emoca_roundtrip` có số ms | Ghi lại mã lỗi hiện trên giao diện (mục 6.1) |
+| — | **Web qua tunnel Colab: hiện KHÔNG dùng được.** Giao diện tối giản (ADR-032) không còn ô xác nhận gửi ảnh, nên với địa chỉ không phải loopback web báo `consent_required` và không gửi ảnh | — | Dùng EMOCA trong WSL2 (mục 2b) |
 | 10 | Khi xong: bấm ■ ở ô giữ phiên | — | — |
 | 11 | Chạy | `N tệp .obj…`, `Gói kết quả: X MB`, trình duyệt tải `emoca_colab_results.zip` | Gói quá nặng ⇒ báo kích thước |
 | 12 | Chạy (tắt server + tunnel) | `Đã tắt: server không còn nghe…` | — |
@@ -535,7 +515,7 @@ Ra file `another/notebooks/emoca_svc_bundle.zip` (không commit). Đổi nơi gh
 
 ### 4c. Nối web với Colab — chọn MỘT cách
 
-**Cách 1 — bảng Cài đặt trên giao diện (khuyên dùng):** mở **Cài đặt** ở đầu trang → cột phải, *Kết nối EMOCA* → **Nguồn EMOCA = Máy chủ EMOCA** → dán **Địa chỉ EMOCA** và **Token** do mục 9 in ra → bấm **Kiểm tra kết nối** (chỉ gọi `GET /v1/health`, không gửi ảnh). Thành công hiện "emoca_svc chạy chế độ real …" kèm độ trễ và GPU.
+**Cấu hình bằng biến môi trường trước khi chạy Streamlit** (ví dụ PowerShell bên dưới). Lưu ý: địa chỉ tunnel không phải loopback nên web sẽ báo `consent_required` và không gửi ảnh — giao diện tối giản (ADR-032) không còn ô xác nhận.
 
 **Cách 2 — biến môi trường** (đặt trong cùng cửa sổ PowerShell, rồi mới chạy server):
 
@@ -546,9 +526,7 @@ $env:EMOCA_TOKEN = "<token do notebook in ra>"
 & $PY -m streamlit run frontend/app.py --server.address 127.0.0.1 --server.port 8599 --server.headless true --browser.gatherUsageStats false
 ```
 
-**Thứ tự ưu tiên** (`backend/web/orchestrator.py`, `resolve_emoca_settings`): ô trên giao diện > hằng `_EMOCA_MODE` trong mã (mặc định `None`) > biến môi trường `EMOCA_MODE`/`EMOCA_URL`/`EMOCA_TOKEN` > `backend/configs/services.yaml` (`emoca_svc`) > `mock`. Hệ quả thực tế:
-- Biến môi trường chỉ làm **giá trị ban đầu** của bảng Cài đặt khi mở phiên; đổi trên giao diện là thắng.
-- Ô Token trên giao diện luôn bắt đầu **trống**; để trống thì dùng `EMOCA_TOKEN`. Gõ token vào ô thì ô thắng.
+**Thứ tự ưu tiên** (`backend/web/orchestrator.py`, `resolve_emoca_settings`): chế độ do giao diện ép (luôn `real`) > biến môi trường `EMOCA_URL`/`EMOCA_TOKEN` > `backend/configs/services.yaml` (`emoca_svc`). Giao diện không còn ô địa chỉ/token.
 - **Không** ghi token vào `backend/configs/services.yaml` (chú thích đầu file cấm).
 - Đổi token không tự phân tích lại — bấm **Phân tích lại**.
 
@@ -564,7 +542,7 @@ $env:EMOCA_TOKEN = "<token do notebook in ra>"
 
 Bất biến hạng 0 của dự án (`CLAUDE.md §1.1`, ADR-009): ảnh khuôn mặt không được gửi ra dịch vụ bên thứ ba. Chạy EMOCA trên Colab **vi phạm** điều này — ảnh đi qua Google (Colab) và Cloudflare (tunnel). ADR-015 chấp nhận ngoại lệ có kiểm soát (nợ `[DEBT-HIGH]`, phạm vi còn chờ người dùng xác nhận):
 
-- Khi địa chỉ EMOCA **không phải** loopback (kể cả máy trong LAN), mục *Kết nối EMOCA* trong bảng Cài đặt hiện ô **"Tôi đồng ý gửi ảnh tới máy chủ này"**, luôn bắt đầu ở trạng thái **tắt**.
+- Khi địa chỉ EMOCA **không phải** loopback (kể cả máy trong LAN), orchestrator đòi xác nhận gửi ảnh; giao diện tối giản (ADR-032) không còn ô xác nhận nên ảnh **không được gửi**.
 - Chưa bật ⇒ `orchestrator.analyze` trả lỗi `consent_required` và **không gửi ảnh**.
 - Đổi nguồn hoặc đổi địa chỉ ⇒ xác nhận bị **thu hồi** (không thể đồng ý cho máy A rồi ngầm gửi sang máy B).
 - Chỉ bật khi đó là ảnh của chính bạn hoặc ảnh công khai. Máy chủ EMOCA của dự án không ghi ảnh ra đĩa, nhưng Google/Cloudflare nằm ngoài tầm kiểm soát.
@@ -593,7 +571,6 @@ $env:MA3D_VENV_PYTHON = $PY       # CHỈ cần khi venv KHÔNG nằm ở $HOME\
 | `& $PY another/tests/check_emoca_stats.py <file.npz>` | numpy | Kiểm file thống kê chuẩn hoá 3DMM (10 khoá, số chiều, NaN, std>0); `--selftest` tự kiểm công cụ (PASS 8 ca). File thật `backend/model/ma3d/checkpoints/rafdb_emoca_stats.npz` → PASS (đo 2026-09-25). |
 | `& $PY another/tests/test_orchestrator.py` | pillow, jsonschema | ALL PASS (23 dòng đạt, đo 2026-09-25 qua `run_all`, `documents/docs/qa/RUNBOOK_DRYRUN_2026-09-25.md`); chạy được ở cả python thường lẫn venv web |
 | `& $PY another/tests/test_ai_mock.py` | pillow, jsonschema | ALL PASS (18 ca theo Session 08) |
-| `& $PY another/tests/test_theme.py` | pillow | ALL PASS (10 ca) |
 | `& $PY another/tests/test_emoca_svc_mock.py` | pillow, jsonschema | ALL PASS (33 ca, đo 2026-09-25 qua `run_all`); dùng cổng tạm |
 | `& $PY another/tests/test_emoca_svc_real.py` | pillow, jsonschema | ALL PASS; backend **giả**, không GPU. *Đã chạy khi viết: ALL PASS.* |
 | `& $PY another/tests/test_emoca_client_remote.py` | pillow, jsonschema | ALL PASS (51 ca, đo 2026-09-25 qua `run_all`); HTTP thật trên cổng tạm cục bộ |
@@ -604,7 +581,7 @@ $env:MA3D_VENV_PYTHON = $PY       # CHỈ cần khi venv KHÔNG nằm ở $HOME\
 | `& $PY another/tests/test_engine_poster_real.py` | **torch + checkpoint** (cài 1.2b) | ALL PASS đã đo (venv web, torch 2.14.0+cpu, Session 09); thiếu torch/checkpoint/RAM ⇒ SKIP, thoát 0. Nặng RAM: kiểm RAM trống trước (nạp cả hai mô hình ~1 GB RSS). |
 | `& $PY another/tests/test_engine_registry_extend.py` | **torch + checkpoint** (cài 1.2b); nhóm **nặng** | M2-06: thêm 3 mục registry tạm và chạy qua `engine.predict` mà không đổi mã (ALL PASS, 12 ok, đo 2026-09-25). Tạm thay `engine._MODELS_CONFIG` bằng tệp tạm rồi khôi phục |
 | `& $PY another/tests/test_wsl_scripts.py` | **Git Bash** (không cần WSL) | Kiểm tĩnh script `backend/services/emoca_svc/wsl/`; ALL PASS (237 ok, đo 2026-09-25). Thiếu Git Bash ⇒ SKIP phần chạy bash. Test chạy lâu nhất nhóm nhẹ (11–47 s) |
-| `& $PY another/tests/audit_contrast_browser.py` | `pip install playwright`, trình duyệt Chromium có sẵn, **server web đang chạy ở cổng 8599** | thoát 1 nếu có chữ không đạt WCAG. `--all` (mọi chủ đề, ~15 phút), `--emoca` (thêm trạng thái Máy chủ EMOCA) |
+| `& $PY another/tests/audit_contrast_browser.py` | `pip install playwright`, trình duyệt Chromium có sẵn, **server web đang chạy ở cổng 8599** | Đo tương phản trang hiện tại (một bộ màu cố định); thoát 1 nếu có chữ không đạt WCAG |
 
 Các con số "(n ca)" lấy từ SESSION_LOG Session 08–09 và `documents/docs/qa/RUNBOOK_DRYRUN_2026-09-25.md` (L6), có thể lệch khi test thay đổi; số đo mới nhất luôn là bảng của `& $PY another/tests/run_all.py`.
 
@@ -653,7 +630,7 @@ Phạm vi cap-30, định tuyến, tự chạy, nhãn dự đoán, grid và rout
 
 ### 5.4 Sửa roll trong baseline và khu so sánh
 
-Baseline tự chạy 3DDFA-V2 trên CPU để ước lượng roll từ crop YOLO. Nếu `abs(roll_deg)` đạt `roll_threshold_deg`, app xoay ảnh 2D ngược chiều roll rồi gửi ảnh đã xoay qua EMOCA và POSTER/MA3D-Net. Với nhiều mặt, app sửa từng crop. Nếu không tìm thấy mặt hoặc phép đo roll lỗi, app giữ ảnh gốc và tiếp tục. Không hiệu chỉnh yaw/pitch và không warp 3D. Hành vi này được bật theo ADR-029; khu **Experiment: Sửa nghiêng (3DDFA-V2)** ở cuối trang vẫn cho xem đối chứng trước/sau.
+Baseline tự chạy 3DDFA-V2 trên CPU để ước lượng roll từ crop YOLO. Nếu `abs(roll_deg)` đạt `roll_threshold_deg`, app xoay ảnh 2D ngược chiều roll rồi gửi ảnh đã xoay qua EMOCA và POSTER/MA3D-Net. Với nhiều mặt, app sửa từng crop. Nếu không tìm thấy mặt hoặc phép đo roll lỗi, app giữ ảnh gốc và tiếp tục. Không hiệu chỉnh yaw/pitch và không warp 3D. Hành vi này được bật theo ADR-029; khu thử nghiệm so sánh trước/sau đã bị xoá theo ADR-032 (2026-10-15).
 
 Ngưỡng nằm trong [`backend/configs/frontalization.yaml`](../../backend/configs/frontalization.yaml): `roll_threshold_deg: 15`, `enabled_in_baseline: true`. Kaggle RAF-DB sweep chọn 15° vì ngưỡng này có mean Acc(all) cao nhất trong các ngưỡng giữ mức giảm ở ảnh 0° dưới 0,2 điểm phần trăm cho từng mô hình. Benchmark dùng ảnh đã căn chỉnh rồi xoay nhân tạo; nó chưa xác nhận hiệu quả trên ảnh tự nhiên (ADR-028/029, Session 42/44).
 
@@ -684,7 +661,7 @@ Lỗi hiện dạng **`[mã] thông báo`**. `status: partial` (hộp vàng) = c
 | `service_unavailable` | Không nối được EMOCA (phiên Colab tắt, tunnel đổi, token sai — HTTP 401 cũng dùng mã này), hoặc bộ điều phối lỗi import | Bấm **Kiểm tra kết nối**; xem 6.2; nếu thông báo nhắc `backend/web/orchestrator.py` thì xem terminal chạy Streamlit rồi khởi động lại |
 | `timeout` | EMOCA không trả lời trong 60 s (`emoca_svc.timeout_s`) | Thử lại (lần gọi đầu sau khi Colab nghỉ có thể chậm); ảnh nhỏ hơn |
 | `model_unavailable` | EMOCA: chưa có địa chỉ, hoặc địa chỉ không bắt đầu bằng `http://`/`https://`. Engine thật: thiếu torch/checkpoint, mô hình không có trong `backend/configs/models.yaml` | Dán địa chỉ; hoặc cài mục 1.2b + tải checkpoint; hoặc chuyển "Suy luận" về Giả lập |
-| `codes_missing` | MA3D-Net thật không suy luận vì: (1) EMOCA đang **giả lập** — thông báo chứa "giả lập" (`backend/web/engine.py:63`, ADR-017); hoặc (2) mã 3DMM thiếu/sai dạng; hoặc (3) thiếu file thống kê `*_emoca_stats.npz` (RAF-DB đã có từ 2026-09-25) | (1) là **hành vi đúng**: nối EMOCA thật (Cài đặt → Kết nối EMOCA, mục 4) để có kết quả MA3D-Net. POSTER không bị ảnh hưởng |
+| `codes_missing` | MA3D-Net thật không suy luận vì: (1) thiếu mã 3DMM thật (EMOCA lỗi hoặc trả mã giả, ADR-017); hoặc (2) thiếu file thống kê `*_emoca_stats.npz` (RAF-DB đã có từ 2026-09-25) | Giao diện luôn gọi EMOCA thật: kiểm EMOCA WSL2 đang chạy (mục 2b). POSTER không bị ảnh hưởng |
 | `contract_mismatch` | Dữ liệu EMOCA sai contract, không phải JSON, hoặc `contract_version` khác `0.3.0` | Đóng gói lại (4a), tải bundle mới lên Colab, chạy lại từ mục 2; nếu vẫn lỗi báo `GENERAL`/`03_BACKEND` (cập nhật 2026-10-03, ADR-019) |
 | `consent_required` | EMOCA trỏ ra ngoài máy mà chưa bật xác nhận; **ảnh chưa được gửi** | Bật "Tôi đồng ý gửi ảnh…" (mục 4d) hoặc chuyển về Giả lập |
 | `internal_error` | Lỗi không lường trước trong bộ điều phối (thông báo có tên exception) | Chép thông báo + log terminal, báo nhóm; bấm Phân tích lại |
@@ -715,10 +692,11 @@ Thông báo lấy từ `backend/web/emoca_client.py` (`_http_error_hint`).
 | **POSTER** (xác suất 7 nhãn, attention, `feature_maps`) | `backend/web/engine.py` mode `mock`: số giả | `backend/web/engine.py` mode `real`, CPU trong tiến trình web | Đo chỉ-đọc 1 ảnh: nạp strict 1369 khoá, tổng xác suất 1.0000. Độ trễ không ổn định: 877 ms lúc rảnh – ~5.4 s lúc thiếu RAM (SESSION_LOG Session 09); đo đầu-cuối qua giao diện ở `documents/docs/qa/E2E_ENGINE_REAL_UI.md`: lần đầu (nguội) ≈ 8.6 s, các lần ấm ≈ 0.9–1.2 s, chạy đơn lẻ nên có nhiễu; **chưa** đo p50/p95 (M4-01). **Chưa** đo độ chính xác so với `eval.py` gốc (M2-07) |
 | **MA3D-Net** | mock: số giả | `backend/web/engine.py` mode `real` + file thống kê `rafdb_emoca_stats.npz` (có từ 2026-09-25, `backend/configs/models.yaml:69-72`). **Chỉ suy luận khi EMOCA thật**; EMOCA giả lập ⇒ từ chối với `codes_missing` (thông báo chứa "giả lập"), POSTER vẫn chạy bình thường (ADR-017) | **M7 real-model smoke PASS:** hai crop đầu vào nhận dự đoán MA3D từ codes EMOCA thật; dữ liệu thử được tạo trong RAM, không phải đánh giá độ chính xác. Chi tiết ở [`M7_REPORT_2026-10-01.md`](qa/M7_REPORT_2026-10-01.md). |
 | **Landmark / 3DMM trên giao diện** | toạ độ `original_px` từ khuôn mẫu giả | `crop224 = lm·112 + 112`, rồi nghịch đảo phép crop về `original_px` (ADR-015 mục 8) | Hệ toạ độ đọc từ mã, **chưa đo** (M0-05) |
-| **Giao diện / tương phản** | — | thật | Đo trong Cốc Cốc thật: 96 tổ hợp chủ đề × chế độ, 0 không đạt (Session 07); sau sửa CSS Session 08 chỉ đo lại 12 tổ hợp. Chạy lại đủ 96 tổ hợp (Backlog (c)): **hoãn** 2026-09-25 vì thiếu RAM. Màn hình hẹp 375 px và spinner: `documents/docs/qa/UI_LOADING_NARROW_2026-09-25.md` |
+| **Giao diện / tương phản** | — | một bộ màu cố định (`frontend/style.css`) | Lịch sử (khi còn nhiều chủ đề): 96 tổ hợp chủ đề × chế độ đạt trong Cốc Cốc thật (Session 07), 12 tổ hợp đo lại ở Session 08. Nay chỉ còn chủ đề `cold` sáng; đo lại bằng `another/tests/audit_contrast_browser.py`: **chưa chạy**. Màn hình hẹp 375 px và spinner: `documents/docs/qa/UI_LOADING_NARROW_2026-09-25.md` |
 | **Mẫu kết quả EMOCA thật dự phòng** (M4-04 AC2) | — | — | Có fixture tập con thật tại `another/tests/fixtures/emoca_analyze_real_sample.min.json`; đã bỏ ảnh dựng/crop có ràng buộc quyền sử dụng, nên không xác nhận schema đầy đủ có các renders bắt buộc. Đây không phải toàn bộ phản hồi EMOCA. `backend/contracts/web_analyze.example.*.json` vẫn chỉ là fixture contract (cập nhật 2026-10-03, ROADMAP M4-04; ADR-019) |
 
-Giao diện luôn nói rõ nguồn: cảnh báo `mock_ai: …` cho phần giả, `engine_real: …` và `emoca_real: … upstream <commit>` cho phần thật; khi chỉ một phần là thật, giao diện ghi "một phần là dữ liệu MOCK" (ADR-015 mục 6). **Một ảnh chỉ là minh hoạ định tính**, không phải bằng chứng "khớp bài báo" (`CLAUDE.md §1.8`).
+**Một ảnh chỉ là minh hoạ định tính**, không phải bằng chứng "khớp bài báo" (`CLAUDE.md §1.8`).
+
 
 ---
 
