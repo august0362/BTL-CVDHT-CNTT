@@ -74,6 +74,9 @@ Expected structure:
     - mobilefacenet_model_best.pth.tar
 ```
 
+`models/MA3D.py` loads them as `checkpoints/ir50_o1.pth` and `checkpoints/mobilefacenet_model_best.pth_o1.tar`
+(relative to the working directory), so also keep a copy under those names.
+
 
 ## Hardware Information
 
@@ -126,6 +129,35 @@ done
 Validation also reports balanced accuracy and macro-F1 (`Val_BAcc` and `Val_MF1` in the log). `--seed` fixes the
 Python, NumPy and PyTorch seeds (cuDNN can still make GPU runs differ slightly), and `--split_seed` (default 0) fixes
 the held-out split so that every tau is compared on the same samples.
+
+### Comparing the losses on CheoFaMo
+
+`scripts/compare_losses.py` checks the setup, then trains `--loss mace` and `--loss bmace` one after the other with
+the same seed on 85% of the CheoFaMo training set, validates both on the held-out 15%, and prints a table:
+
+```bash
+python -m scripts.compare_losses --check     # data, weights, packages and a time estimate
+python -m scripts.compare_losses             # 30 epochs per loss (about 3 h each on a GTX 1660 Ti)
+python -m scripts.compare_losses --summary   # table of the finished runs
+```
+
+It expects:
+
+```
+- checkpoints/
+    - ir50_o1.pth, mobilefacenet_model_best.pth_o1.tar   (see Pretrained Models)
+- Datasets/CheoFamo/
+    - Metadata.json
+    - cheofamo_stats.npz                     (written by --compute_stats if missing)
+    - Frames/<video>_<character>_<apex>/     e.g. 01_02_00123/
+        - the segment image
+        - exp.npy, detail.npy, pose.npy, shape.npy, tex.npy   (EMOCA; shapes 50, 128, 6, 100, 50)
+```
+
+Finished runs are skipped when the script is started again, and an interrupted run starts over. `--taus 0.1 0.25 0.5`
+adds more settings and `--epochs 100` uses the full schedule. Note that `compute_cheofamo_stats` averages over all
+segments, test segments included.
+
 ## Testing
 
 If you want to use our pretrained model, you can download the best checkpoint [here](https://drive.google.com/drive/folders/10tltNSB009VoalxTo46IUMpQhPANudhF?usp=drive_link) and place it into the `checkpoints/` directory.
