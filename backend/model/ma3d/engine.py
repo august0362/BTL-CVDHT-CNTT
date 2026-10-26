@@ -13,8 +13,9 @@ def get_loss(logits, labels, CE_criterion, lsce_criterion, MA_criterion, epoch):
     lsce_loss = lsce_criterion(logits, labels)
     MA_loss = MA_criterion(logits, labels)
 
+    # Warm-up: CE + label-smoothing CE for the first 10 epochs, then MACE only.
     loss = 2 * lsce_loss + CE_loss
-    if epoch < 10:
+    if epoch >= 10:
         loss = MA_loss
 
     return loss

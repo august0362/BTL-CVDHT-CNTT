@@ -29,7 +29,7 @@ def get_args():
 
     # Loss
     parser.add_argument("--loss", default="mace", choices=["mace", "bmace"],
-                        help="mace: MarginAwareCELoss for the first 10 epochs, then CE + 2 * LSCE (unchanged); "
+                        help="mace: CE + 2 * LSCE for the first 10 epochs, then MarginAwareCELoss; "
                              "bmace: BalancedMarginAwareCELoss")
     parser.add_argument("--tau", type=float, default=0.25, help="logit-adjustment strength for --loss bmace")
 

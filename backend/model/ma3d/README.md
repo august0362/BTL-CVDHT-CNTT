@@ -98,7 +98,8 @@ The `batch_size` can be scaled according to the available GPU resources. Using a
 
 `--loss` selects the training objective:
 
-- `mace` (default): `MarginAwareCELoss` for the first 10 epochs, then CE + 2 × label-smoothing CE, as before.
+- `mace` (default): CE + 2 × label-smoothing CE for the first 10 epochs (warm-up), then `MarginAwareCELoss` only,
+  as described in the paper.
 - `bmace`: `BalancedMarginAwareCELoss`. For the first 10 epochs it is label-smoothed CE (ε = 2/15, the same
   smoothing as CE + 2 × LSCE(0.2)) on logits shifted by `tau × log(class prior)`; the MACE-style margin weights
   (detached from the gradient) are then ramped in over 5 epochs. The prior shift is only applied during training;
