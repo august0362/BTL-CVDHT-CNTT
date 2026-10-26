@@ -89,7 +89,9 @@ def get_dataloaders(args):
         val_dataset = Subset(holdout_dataset, val_idx)
         train_dataset = Subset(train_dataset, train_idx)
 
-    train_loader = DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True, num_workers=args.num_workers, pin_memory=True, drop_last=True)
-    val_loader = DataLoader(val_dataset, batch_size=args.batch_size, shuffle=False, num_workers=args.num_workers, pin_memory=True)
+    # Keep workers alive between epochs: on Windows every new worker re-imports torch and the model code.
+    persistent = args.num_workers > 0
+    train_loader = DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True, num_workers=args.num_workers, pin_memory=True, drop_last=True, persistent_workers=persistent)
+    val_loader = DataLoader(val_dataset, batch_size=args.batch_size, shuffle=False, num_workers=args.num_workers, pin_memory=True, persistent_workers=persistent)
 
     return train_loader, val_loader
