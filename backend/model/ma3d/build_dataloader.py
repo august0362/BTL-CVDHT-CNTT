@@ -1,7 +1,27 @@
 import os
-from torch.utils.data import DataLoader
+import copy
+from sklearn.model_selection import train_test_split
+from torch.utils.data import DataLoader, Subset
 from torchvision import transforms
 from Read_dataset import *
+
+
+def dataset_labels(dataset):
+    """Class index of every sample, read from the sample list without loading images."""
+    if isinstance(dataset, Subset):
+        labels = dataset_labels(dataset.dataset)
+        return [labels[i] for i in dataset.indices]
+    if hasattr(dataset, "label2idx"):
+        return [dataset.label2idx[s["emotion"]] for s in dataset.samples]
+    return [s["label"] for s in dataset.samples]
+
+
+def class_counts(labels, num_classes):
+    counts = [0] * num_classes
+    for label in labels:
+        counts[label] += 1
+    return counts
+
 
 def get_dataloaders(args):
     normalize = transforms.Normalize(
@@ -52,6 +72,22 @@ def get_dataloaders(args):
         cheo_root = os.path.join(data_dir, "cheo_dataset")
         train_dataset = DatasetCheo(json_path=os.path.join(cheo_root, "votes_train.json"), root_dir=cheo_root, transform=train_transform)
         val_dataset = DatasetCheo(json_path=os.path.join(cheo_root, "votes_valid.json"), root_dir=cheo_root, transform=val_transform)
+
+    # Hold out a stratified part of the training set (with test-time transforms) and validate on it
+    # instead of the test set, e.g. to choose tau for BalancedMarginAwareCELoss.
+    val_split = getattr(args, "val_split", 0.0)
+    if val_split > 0:
+        labels = dataset_labels(train_dataset)
+        train_idx, val_idx = train_test_split(
+            list(range(len(labels))),
+            test_size=val_split,
+            stratify=labels,
+            random_state=getattr(args, "split_seed", 0)
+        )
+        holdout_dataset = copy.copy(train_dataset)
+        holdout_dataset.transform = val_transform
+        val_dataset = Subset(holdout_dataset, val_idx)
+        train_dataset = Subset(train_dataset, train_idx)
 
     train_loader = DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True, num_workers=args.num_workers, pin_memory=True, drop_last=True)
     val_loader = DataLoader(val_dataset, batch_size=args.batch_size, shuffle=False, num_workers=args.num_workers, pin_memory=True)

@@ -8,7 +8,7 @@ Chạy:
 Định dạng đúng (suy từ mã gốc, không đoán):
 - Một file `np.savez` gồm ĐÚNG 10 khoá `{exp,detail,pose,shape,tex}_{mean,std}`; mỗi mảng là vector số thực
   có số phần tử: exp 50, detail 128, pose 6, shape 100, tex 50 (model/ma3d/Read_dataset/RAF_DB.py:30-31).
-  Tổng 334 = chiều `x_3d` ghép theo thứ tự [exp, detail, pose, shape, tex] (model/ma3d/engine.py:27;
+  Tổng 334 = chiều `x_3d` ghép theo thứ tự [exp, detail, pose, shape, tex] (model/ma3d/engine.py:33;
   web/engine.py `_X3D_ORDER`).
 - Cách dùng: x = (x − `<key>_mean`) / `<key>_std` cho từng nhóm (RAF_DB.py:76-77; Caers.py:90-91;
   DatasetCheo.py:98-99; web/engine.py `_x3d`, đọc file bằng `_load_stats` rồi reshape(-1)).

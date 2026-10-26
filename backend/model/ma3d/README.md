@@ -89,10 +89,42 @@ To train on a specific dataset (e.g., RAF-DB):
 
 
 ```bash
-python train.py --seed 42--data_type RAF-DB --batch_size 8 --resume_name checkpoints/rafdb_best.pth
+python train.py --seed 42 --data_type RAF-DB --batch_size 8 --resume_name checkpoints/rafdb_best.pth
 ```
 
 The `batch_size` can be scaled according to the available GPU resources. Using a larger batch size may lead to better performance. Training logs are saved in the `log` directory. Running the training multiple times is recommended to obtain optimal results.
+
+### Loss options
+
+`--loss` selects the training objective:
+
+- `mace` (default): `MarginAwareCELoss` for the first 10 epochs, then CE + 2 × label-smoothing CE, as before.
+- `bmace`: `BalancedMarginAwareCELoss`. For the first 10 epochs it is label-smoothed CE (ε = 2/15, the same
+  smoothing as CE + 2 × LSCE(0.2)) on logits shifted by `tau × log(class prior)`; the MACE-style margin weights
+  (detached from the gradient) are then ramped in over 5 epochs. The prior shift is only applied during training;
+  evaluation uses the raw logits.
+
+`--tau` sets the strength of the class-prior shift. Larger values favour minority classes more and can lower overall
+accuracy sharply, so choose it on a held-out part of the training set instead of the test set:
+
+```bash
+# 1) Choose tau on a stratified 15% of the training set (the test set is not used).
+for tau in 0 0.1 0.25 0.5; do
+  python train.py --data_type CheoFaMo --num_classes 6 --loss bmace --tau $tau --val_split 0.15 --seed 42 \
+    --log_file cheofamo_tau$tau.txt --resume_name cheofamo_tau$tau.pth
+done
+# Keep the tau with the highest "Best validation macro-F1" at the end of its log.
+
+# 2) Train on the full training set with that tau, over several seeds.
+for seed in 0 42 123 3407 9999; do
+  python train.py --data_type CheoFaMo --num_classes 6 --loss bmace --tau 0.25 --seed $seed \
+    --log_file cheofamo_bmace_s$seed.txt --resume_name cheofamo_bmace_s$seed.pth
+done
+```
+
+Validation also reports balanced accuracy and macro-F1 (`Val_BAcc` and `Val_MF1` in the log). `--seed` fixes the
+Python, NumPy and PyTorch seeds (cuDNN can still make GPU runs differ slightly), and `--split_seed` (default 0) fixes
+the held-out split so that every tau is compared on the same samples.
 ## Testing
 
 If you want to use our pretrained model, you can download the best checkpoint [here](https://drive.google.com/drive/folders/10tltNSB009VoalxTo46IUMpQhPANudhF?usp=drive_link) and place it into the `checkpoints/` directory.

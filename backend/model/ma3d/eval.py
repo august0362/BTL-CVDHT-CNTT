@@ -32,8 +32,7 @@ def load_model(ckpt_path, device, num_classes):
 @torch.no_grad()
 def evaluate(model, loader, device):
     criterion = torch.nn.CrossEntropyLoss()
-    loss, acc = validate(model, loader, criterion, device, 0, 1)
-    return loss, acc
+    return validate(model, loader, criterion, device, 0, 1)
 
 
 def main():
@@ -44,11 +43,13 @@ def main():
 
     model = load_model(args.ckpt_path, device, args.num_classes)
 
-    loss, acc = evaluate(model, val_loader, device)
+    loss, acc, metrics = evaluate(model, val_loader, device)
 
     print(f"Checkpoint: {args.ckpt_path}")
     print(f"Loss: {loss:.4f}")
     print(f"Acc : {acc * 100:.2f}%")
+    print(f"Balanced acc: {metrics['balanced_acc'] * 100:.2f}%")
+    print(f"Macro-F1    : {metrics['macro_f1'] * 100:.2f}%")
 
 
 if __name__ == "__main__":

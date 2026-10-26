@@ -37,12 +37,12 @@ _ATTN_GRID = (7, 7)
 _ROOT = Path(__file__).resolve().parent.parent
 _MODELS_CONFIG = _ROOT / "configs" / "models.yaml"
 _MA3D_REPO = _ROOT / "model" / "ma3d"
-# Tiền xử lý lúc suy luận = val_transform của repo gốc (model/ma3d/build_dataloader.py:20-24).
+# Tiền xử lý lúc suy luận = val_transform của repo gốc (model/ma3d/build_dataloader.py:40-44).
 # Là một phần của checkpoint (bất biến §1.5): KHÔNG đổi nếu không có checkpoint mới + ADR.
 _INPUT_SIZE = (224, 224)
 _NORM_MEAN = (0.485, 0.456, 0.406)
 _NORM_STD = (0.229, 0.224, 0.225)
-# Thứ tự ghép x_3d = prepare_batch của repo gốc (model/ma3d/engine.py:27).
+# Thứ tự ghép x_3d = prepare_batch của repo gốc (model/ma3d/engine.py:33).
 _X3D_ORDER = ("exp", "detail", "pose", "shape", "tex")
 # MA3D.__init__ nạp backbone bằng đường dẫn tương đối (model/ma3d/models/MA3D.py:87,99) với tên *_o1
 # không có trên Drive; configs/models.yaml ghi bằng chứng hai file Drive tương đương ⇒ chuyển hướng.

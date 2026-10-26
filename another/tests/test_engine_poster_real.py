@@ -249,8 +249,8 @@ def test_preprocessing_matches_upstream():
     except ImportError:
         print("  SKIP: không có torchvision — bỏ qua so sánh trực tiếp")
         return
-    normalize = T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])  # build_dataloader.py:7-10
-    val_transform = T.Compose([T.Resize((224, 224)), T.ToTensor(), normalize])       # build_dataloader.py:20-24
+    normalize = T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])  # build_dataloader.py:27-30
+    val_transform = T.Compose([T.Resize((224, 224)), T.ToTensor(), normalize])       # build_dataloader.py:40-44
     for size in ((320, 260), (224, 224), (97, 131), (640, 480)):
         img = Image.fromarray(np.random.RandomState(size[0]).randint(0, 255, (size[1], size[0], 3)).astype("uint8"))
         ref = val_transform(img).unsqueeze(0)
@@ -279,7 +279,7 @@ def test_x3d_layout():
         want = (np.asarray(c[k], dtype="float32") - stats[f"{k}_mean"]) / stats[f"{k}_std"]
         ok &= bool(np.allclose(x[0, off:off + n].numpy(), want, atol=1e-6))
         off += n
-    check(ok, "từng khối nằm đúng vị trí và đã chuẩn hoá (theo RAF_DB.py:76-77 / engine.py:27 của repo gốc)")
+    check(ok, "từng khối nằm đúng vị trí và đã chuẩn hoá (theo RAF_DB.py:76-77 / engine.py:33 của repo gốc)")
     swapped = dict(c, exp=c["shape"][:50] + [], shape=c["exp"] + [0.0] * 50)
     check(not np.allclose(engine._x3d(torch, swapped, stats).numpy(), x.numpy()), "đổi chỗ nhóm mã ⇒ vector đổi (kiểm không suy biến)")
     partial = {k: v for k, v in stats.items() if k != "pose_std"}
